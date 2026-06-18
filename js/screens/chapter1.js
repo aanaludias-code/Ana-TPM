@@ -4,7 +4,7 @@
 
 import { register, go } from '../router.js';
 import { completeChapter, unlockCodex, addEvidence, getState } from '../state.js';
-import { on, toast, feedback, note, esc } from '../ui.js';
+import { on, toast, feedback, note, esc, modal } from '../ui.js';
 import { chapterByN } from '../data/chapters.js';
 import { renderSVG, possibleGenotypes, findViolations } from '../genetics/pedigree.js';
 import { chapterShell } from './common.js';
@@ -196,19 +196,17 @@ function fmtGeno(g) {
 function sup(c) { return ({ A: 'ᴬ', a: 'ᵃ', B: 'ᴮ' })[c] || c; }
 
 export function afterChapter(node, n) {
-  import('../ui.js').then(({ modal }) => {
-    const next = n + 1;
-    modal(`
-      <h2>Capítulo ${n} concluído ✔</h2>
-      <p>Uma nova ferramenta foi adicionada ao seu laboratório e o próximo local está aberto.</p>
-      <div class="center row" style="justify-content:center;margin-top:14px">
-        <button class="btn" data-close>Ficar aqui</button>
-        ${next <= 5 ? `<button class="btn primary" id="go-next">Ir ao Capítulo ${next} →</button>` : `<button class="btn primary" id="go-end">Ver desfecho →</button>`}
-      </div>
-    `, {});
-    const nx = document.getElementById('go-next');
-    const ge = document.getElementById('go-end');
-    if (nx) nx.addEventListener('click', () => go('chapter' + next));
-    if (ge) ge.addEventListener('click', () => go('ending'));
-  });
+  const next = n + 1;
+  modal(`
+    <h2>Capítulo ${n} concluído ✔</h2>
+    <p>Uma nova ferramenta foi adicionada ao seu laboratório e o próximo local está aberto.</p>
+    <div class="center row" style="justify-content:center;margin-top:14px">
+      <button class="btn" data-close>Ficar aqui</button>
+      ${next <= 5 ? `<button class="btn primary" id="go-next">Ir ao Capítulo ${next} →</button>` : `<button class="btn primary" id="go-end">Ver desfecho →</button>`}
+    </div>
+  `, {});
+  const nx = document.getElementById('go-next');
+  const ge = document.getElementById('go-end');
+  if (nx) nx.addEventListener('click', () => go('chapter' + next));
+  if (ge) ge.addEventListener('click', () => go('ending'));
 }

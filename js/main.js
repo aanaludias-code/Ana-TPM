@@ -16,9 +16,7 @@ import './screens/chapter5.js';
 import './screens/ending.js';
 
 // Optional genetics self-test via ?selftest
-if (new URLSearchParams(location.search).has('selftest')) {
-  import('./genetics/selftest.js').then(m => m.run());
-}
+if (new URLSearchParams(location.search).has('selftest')) import('./genetics/selftest.js').then(m => m.run());
 
 // Boot
 load();

@@ -11,16 +11,21 @@ análise de mutações e cálculo de probabilidades**.
 
 ## Como jogar
 
+### Opção A — Arquivo único (sem instalar nada) ✅ mais fácil
+Abra **`dist/herdeiro-genetico.html`** com dois cliques. É uma versão autocontida
+(todo o CSS e JS embutidos) que roda direto no navegador, sem servidor nem comandos.
+
+### Opção B — Servir localmente (versão modular)
 O jogo é **HTML/CSS/JS puro** (módulos ES), sem etapa de build. Os módulos ES exigem
-ser servidos por HTTP (não funcionam abrindo o arquivo via `file://`):
+ser servidos por HTTP (não funcionam abrindo o `index.html` via `file://`):
 
 ```bash
 cd Ana-TPM
-python3 -m http.server 8000
+python3 -m http.server 8000   # ou: npm start
 # abra http://localhost:8000
 ```
 
-Ou `npm start` (atalho para o mesmo servidor).
+> O arquivo único é gerado a partir do código modular com `node build-singlefile.js`.
 
 1. **Nova Investigação** → escolha um dos três investigadores (forças diferentes em
    análise, dedução e interação social).

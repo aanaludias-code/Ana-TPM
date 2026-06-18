@@ -2,7 +2,7 @@
 
 import { register, go } from '../router.js';
 import { hasSave, reset, load } from '../state.js';
-import { on } from '../ui.js';
+import { on, modal } from '../ui.js';
 import { CREST } from '../data/svg.js';
 
 register('title', (node) => {
@@ -39,8 +39,7 @@ register('title', (node) => {
 });
 
 function showAbout() {
-  import('../ui.js').then(({ modal }) => {
-    modal(`
+  modal(`
       <h2>Sobre o Jogo</h2>
       <p>Cada capítulo apresenta um desafio real de genética — não um questionário.
       Você constrói heredogramas, preenche genótipos, calcula probabilidades, interpreta
@@ -51,5 +50,4 @@ function showAbout() {
       mutações, reparo de DNA, probabilidade e aconselhamento genético.</p>
       <div class="center" style="margin-top:14px"><button class="btn" data-close>Fechar</button></div>
     `);
-  });
 }

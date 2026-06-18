@@ -1,0 +1,2604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herdeiro Genético: A Linhagem Perdida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+/* ============================================================
+   theme.css — palette, parchment textures, fonts, base layout
+   Herdeiro Genético: A Linhagem Perdida
+   ============================================================ */
+
+:root {
+  /* Earthy storybook palette */
+  --parchment:      #e9d8b4;
+  --parchment-2:    #ddc79a;
+  --parchment-deep: #c9ad7a;
+  --ink:            #3a2a1a;
+  --ink-soft:       #5b4630;
+  --oxblood:        #7a2d24;
+  --oxblood-light:  #a8453a;
+  --forest:         #3f5d3a;
+  --forest-light:   #5e8155;
+  --gold:           #b8893b;
+  --gold-light:     #e0b35e;
+  --wood:           #8a5a32;
+  --wood-dark:      #5e3a1e;
+  --cream:          #f3e8cf;
+  --shadow:         rgba(40, 26, 12, 0.45);
+
+  /* Fonts */
+  --font-display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-body:    'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-note:    'Caveat', 'Comic Sans MS', cursive;
+
+  --radius: 10px;
+  --maxw: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: #2a1d10;
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Layered parchment background */
+.bg-parchment {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,245,220,0.55), transparent 55%),
+    radial-gradient(circle at 75% 80%, rgba(160,120,70,0.30), transparent 55%),
+    linear-gradient(135deg, var(--parchment) 0%, var(--parchment-2) 45%, var(--parchment-deep) 100%);
+}
+
+/* Subtle paper grain via SVG noise data-uri */
+.bg-parchment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.10;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Soft dark vignette so it reads "cozy dark fantasy" */
+.bg-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: inset 0 0 220px 60px rgba(40, 24, 8, 0.55);
+}
+
+#app {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--oxblood);
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5em;
+  line-height: 1.15;
+  text-shadow: 0 1px 0 rgba(255,245,220,0.4);
+}
+h1 { font-size: 2.4rem; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.25rem; color: var(--ink-soft); }
+
+p { margin: 0 0 0.8em; }
+
+a { color: var(--oxblood); }
+
+::selection { background: var(--gold-light); color: var(--ink); }
+
+/* Scrollbar flavor */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--parchment-deep); }
+::-webkit-scrollbar-thumb {
+  background: var(--wood);
+  border-radius: 8px;
+  border: 2px solid var(--parchment-deep);
+}
+
+/* Utility */
+.center { text-align: center; }
+.muted  { color: var(--ink-soft); }
+.hidden { display: none !important; }
+.stack  { display: flex; flex-direction: column; gap: 16px; }
+.row    { display: flex; gap: 16px; flex-wrap: wrap; }
+.grow   { flex: 1; }
+
+/* Fade-in for screen transitions */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.screen { animation: fadeUp 0.35s ease both; }
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  h1 { font-size: 1.9rem; }
+}
+
+
+/* ============================================================
+   components.css — reusable UI: buttons, panels, dialogue,
+   cards, modals, sticky cheat-sheet notes, ribbon banners,
+   vine frames, crib slots, badges, progress bars
+   ============================================================ */
+
+/* ---------- Parchment panel ---------- */
+.panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255,250,235,0.55), rgba(210,185,140,0.25)),
+    var(--cream);
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px var(--shadow), inset 0 0 30px rgba(150,110,60,0.18);
+  padding: 22px 24px;
+}
+.panel.tight { padding: 14px 16px; }
+
+/* Decorative corner-flourish for important panels */
+.panel.flourish::before,
+.panel.flourish::after {
+  content: "❧";
+  position: absolute;
+  font-size: 1.2rem;
+  color: var(--gold);
+  opacity: 0.7;
+}
+.panel.flourish::before { top: 8px; left: 12px; }
+.panel.flourish::after  { bottom: 4px; right: 12px; transform: scaleX(-1); }
+
+/* ---------- Buttons (carved wood / parchment) ---------- */
+.btn {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+  background: linear-gradient(180deg, var(--wood) 0%, var(--wood-dark) 100%);
+  border: 2px solid var(--wood-dark);
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  box-shadow: 0 3px 0 var(--wood-dark), 0 5px 10px var(--shadow);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--wood-dark), 0 2px 6px var(--shadow); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.4); }
+
+.btn.primary {
+  background: linear-gradient(180deg, var(--oxblood-light) 0%, var(--oxblood) 100%);
+  border-color: #5a201a;
+  box-shadow: 0 3px 0 #5a201a, 0 5px 10px var(--shadow);
+}
+.btn.primary:active { box-shadow: 0 0 0 #5a201a, 0 2px 6px var(--shadow); }
+
+.btn.success {
+  background: linear-gradient(180deg, var(--forest-light) 0%, var(--forest) 100%);
+  border-color: #2c4228;
+  box-shadow: 0 3px 0 #2c4228, 0 5px 10px var(--shadow);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 2px dashed var(--wood);
+  box-shadow: none;
+}
+.btn.small { padding: 6px 12px; font-size: 0.85rem; }
+.btn.block { display: block; width: 100%; }
+
+/* Circular emblem icon button (bottom-bar style from reference) */
+.emblem {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: inline-grid; place-items: center;
+  font-size: 1.4rem;
+  color: var(--cream);
+  background: radial-gradient(circle at 35% 30%, var(--wood) 0%, var(--wood-dark) 100%);
+  border: 3px solid var(--gold);
+  box-shadow: 0 3px 8px var(--shadow);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.emblem:hover { transform: translateY(-2px) scale(1.05); }
+.emblem.locked { filter: grayscale(1) brightness(0.7); cursor: not-allowed; border-color: #7a6a4a; }
+
+/* ---------- Ribbon name banner (under portraits) ---------- */
+.ribbon {
+  display: inline-block;
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  padding: 3px 14px;
+  border: 1.5px solid var(--wood);
+  border-radius: 3px;
+  box-shadow: 0 2px 4px var(--shadow);
+  white-space: nowrap;
+}
+.ribbon::before, .ribbon::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 8px;
+  background: var(--wood);
+}
+.ribbon::before { left: -8px; clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+.ribbon::after  { right: -8px; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+
+/* ---------- Vine-framed portrait wrapper ---------- */
+.portrait {
+  position: relative;
+  width: 96px; height: 96px;
+  display: grid; place-items: center;
+}
+.portrait svg { width: 100%; height: 100%; display: block; }
+.portrait.selectable { cursor: pointer; transition: transform 0.12s ease; }
+.portrait.selectable:hover { transform: translateY(-3px) scale(1.04); }
+.portrait.chosen { filter: drop-shadow(0 0 6px var(--gold-light)); }
+.portrait .badge {
+  position: absolute; top: -6px; right: -6px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--oxblood); color: var(--cream);
+  display: grid; place-items: center;
+  font-size: 0.8rem; font-weight: 700;
+  border: 2px solid var(--cream);
+}
+
+.person {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Sticky cheat-sheet note (genetics rules) ---------- */
+.note {
+  position: relative;
+  font-family: var(--font-note);
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: #2c2418;
+  background: #fff7d6;
+  background-image:
+    repeating-linear-gradient(transparent 0 31px, rgba(120,100,60,0.18) 31px 32px);
+  padding: 18px 20px 16px;
+  border: 1px solid #e6d59a;
+  box-shadow: 3px 5px 12px var(--shadow);
+  transform: rotate(-1.2deg);
+  max-width: 340px;
+}
+.note::before { /* tape */
+  content: "";
+  position: absolute; top: -12px; left: 50%;
+  width: 80px; height: 24px; transform: translateX(-50%) rotate(2deg);
+  background: rgba(200,180,120,0.55);
+  border: 1px solid rgba(150,130,80,0.4);
+}
+.note h4 {
+  font-family: var(--font-note);
+  font-size: 1.55rem; margin: 0 0 6px; color: var(--oxblood);
+}
+.note ul { margin: 0; padding-left: 1.1em; }
+.note .tag {
+  position: absolute; top: 6px; right: 10px;
+  font-size: 1.1rem; color: var(--forest);
+  transform: rotate(6deg);
+}
+
+/* ---------- Dialogue box ---------- */
+.dialogue {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: linear-gradient(180deg, rgba(255,250,235,0.7), rgba(210,185,140,0.3));
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.dialogue .speaker { font-family: var(--font-display); color: var(--oxblood); font-size: 0.95rem; }
+.dialogue .line { margin: 2px 0 0; font-size: 1.05rem; }
+
+/* ---------- Cards (evidence / options / codex) ---------- */
+.card {
+  background: var(--cream);
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 3px 8px var(--shadow);
+}
+.card.selectable { cursor: pointer; transition: transform 0.1s ease, border-color 0.1s ease; }
+.card.selectable:hover { transform: translateY(-2px); border-color: var(--gold); }
+.card.chosen { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(95,129,85,0.4), 0 3px 8px var(--shadow); }
+.card.wrong  { border-color: var(--oxblood); animation: shake 0.35s; }
+.card h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 1rem; color: var(--ink-soft); }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* ---------- Crib slot (baby selection, from reference 2) ---------- */
+.crib {
+  width: 120px;
+  padding: 10px 8px;
+  background: repeating-linear-gradient(90deg, #c9a06a 0 8px, #b88a52 8px 16px);
+  border: 3px solid var(--wood-dark);
+  border-radius: 14px 14px 18px 18px;
+  box-shadow: inset 0 6px 14px rgba(60,30,10,0.3), 0 3px 8px var(--shadow);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.crib:hover { transform: translateY(-3px); }
+.crib.chosen { box-shadow: inset 0 6px 14px rgba(60,30,10,0.3), 0 0 0 4px var(--gold-light), 0 3px 8px var(--shadow); }
+
+/* ---------- Progress / stat bars ---------- */
+.bar {
+  height: 12px; background: rgba(60,40,20,0.35);
+  border-radius: 6px; overflow: hidden; border: 1px solid var(--wood-dark);
+}
+.bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.bar.health > span { background: linear-gradient(90deg, #3f6f9e, #6fa3cf); }
+.bar.skill  > span { background: linear-gradient(90deg, var(--forest), var(--forest-light)); }
+
+/* ---------- Pills / badges ---------- */
+.pill {
+  display: inline-block;
+  font-size: 0.8rem; font-family: var(--font-display);
+  padding: 2px 10px; border-radius: 999px;
+  background: var(--parchment-deep); color: var(--ink);
+  border: 1px solid var(--wood);
+}
+.pill.gold { background: var(--gold-light); }
+.pill.blood { background: var(--oxblood); color: var(--cream); border-color: #5a201a; }
+.pill.leaf { background: var(--forest-light); color: var(--cream); border-color: #2c4228; }
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(30,18,6,0.6);
+  display: grid; place-items: center;
+  padding: 20px;
+  animation: fadeUp 0.2s ease;
+}
+.modal {
+  max-width: 560px; width: 100%;
+  max-height: 86vh; overflow-y: auto;
+}
+
+/* ---------- Toast ---------- */
+#toast-layer {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  pointer-events: none;
+}
+.toast {
+  font-family: var(--font-display);
+  background: var(--ink); color: var(--cream);
+  padding: 10px 18px; border-radius: 999px;
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 12px var(--shadow);
+  animation: fadeUp 0.25s ease;
+}
+.toast.good { background: var(--forest); border-color: var(--forest-light); }
+.toast.bad  { background: var(--oxblood); border-color: var(--oxblood-light); }
+
+/* ---------- Feedback box (scientific explanation) ---------- */
+.feedback {
+  border-left: 6px solid var(--gold);
+  background: rgba(255,250,235,0.6);
+  padding: 12px 16px; border-radius: 6px; margin-top: 12px;
+}
+.feedback.good { border-left-color: var(--forest); }
+.feedback.bad  { border-left-color: var(--oxblood); }
+
+
+/* ============================================================
+   game.css — screen-specific layouts: title, protagonist
+   select, map hub, journal/codex, pedigree tree, lab tools
+   ============================================================ */
+
+/* ---------- Top game bar ---------- */
+.gamebar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.gamebar .crest { font-size: 1.6rem; }
+.gamebar .title { font-family: var(--font-display); color: var(--oxblood); font-weight: 700; }
+.gamebar .spacer { flex: 1; }
+.gamebar .insight { display: flex; align-items: center; gap: 6px; }
+
+/* ---------- Title screen ---------- */
+.title-screen {
+  text-align: center;
+  padding-top: 4vh;
+}
+.title-screen .crest-big { font-size: 5rem; line-height: 1; }
+.title-screen h1 {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  margin: 8px 0 0;
+  color: var(--oxblood);
+}
+.title-screen .subtitle {
+  font-family: var(--font-note);
+  font-size: 1.6rem; color: var(--ink-soft); margin-bottom: 24px;
+}
+.title-screen .menu { display: inline-flex; flex-direction: column; gap: 12px; min-width: 280px; }
+.title-screen .blurb { max-width: 620px; margin: 26px auto 0; }
+
+/* ---------- Protagonist select ---------- */
+.protagonist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+.protagonist-grid .card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.protagonist-grid .portrait { width: 130px; height: 130px; }
+.statline { width: 100%; display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin-top: 10px; }
+.statline .label { font-family: var(--font-display); font-size: 0.8rem; text-align: right; }
+
+/* ---------- Map / location hub ---------- */
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px; margin-top: 16px;
+}
+.location {
+  position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+  min-height: 150px;
+}
+.location .loc-icon { font-size: 2.4rem; }
+.location.locked { filter: grayscale(0.7) brightness(0.85); }
+.location .lock-tag { position: absolute; top: 10px; right: 12px; }
+
+/* Tool tray (bottom, emblem buttons) */
+.tooltray {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  margin-top: 20px; padding: 12px 14px;
+}
+.tooltray .tool { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.7rem; }
+
+/* ---------- Codex / journal ---------- */
+.codex-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.codex-entry h4 { color: var(--oxblood); }
+.codex-entry.locked { opacity: 0.55; }
+.codex-entry .lock { font-family: var(--font-note); color: var(--ink-soft); }
+
+/* ---------- Pedigree / family tree ---------- */
+.pedigree {
+  position: relative;
+  overflow-x: auto;
+  padding: 20px 8px;
+}
+.pedigree svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.pedigree-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.9rem; margin-top: 8px; }
+.pedigree-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 18px; height: 18px; border: 2px solid var(--ink); display: inline-block; }
+.legend-swatch.sq { border-radius: 2px; }
+.legend-swatch.ci { border-radius: 50%; }
+.legend-swatch.filled { background: var(--ink); }
+
+/* genotype assignment row */
+.geno-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--wood); }
+.geno-row select { font-family: var(--font-body); font-size: 1rem; padding: 4px 8px; border: 2px solid var(--wood); border-radius: 6px; background: var(--cream); }
+
+/* ---------- Lab tool generic ---------- */
+.lab {
+  display: grid; gap: 16px;
+}
+.lab .readout {
+  font-family: 'Courier New', monospace;
+  background: #1f1a12; color: #d7f0c0;
+  border-radius: 8px; padding: 14px 16px;
+  border: 2px solid var(--wood-dark);
+  white-space: pre-wrap; overflow-x: auto;
+}
+
+/* Karyotype grid */
+.karyotype { display: grid; grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); gap: 10px; }
+.chromo {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer; padding: 6px; border-radius: 8px; border: 2px solid transparent;
+}
+.chromo:hover { border-color: var(--gold); }
+.chromo.flagged { border-color: var(--oxblood); background: rgba(168,69,58,0.15); }
+.chromo .num { font-size: 0.75rem; font-family: var(--font-display); }
+
+/* Blood typing layout */
+.blood-cross { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+
+/* objective banner */
+.objective {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(63,93,58,0.18);
+  border: 2px solid var(--forest);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.objective .obj-icon { font-size: 1.5rem; }
+
+/* responsive tweaks */
+@media (max-width: 640px) {
+  .crib { width: 96px; }
+  .portrait { width: 80px; height: 80px; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="bg-parchment" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+  <main id="app" role="main"></main>
+  <div id="toast-layer" aria-live="polite"></div>
+  <noscript><div style="padding:2rem;text-align:center;font-family:serif">Este jogo precisa de JavaScript ativado.</div></noscript>
+  <script type="module">
+
+/* ===== js/genetics/probability.js ===== */
+/* probability.js — fraction helpers and independent-event combination.
+   All genetics probability in the game flows through these so results
+   are always exact and reducible. */
+
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a || 1; }
+
+/** Reduced fraction {n, d}. */
+function fraction(n, d) {
+  if (d === 0) throw new Error('denominador zero');
+  if (d < 0) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return { n: n / g, d: d / g };
+}
+
+/** Multiply independent probabilities (each {n,d}). */
+function combineAnd(...fracs) {
+  let n = 1, d = 1;
+  for (const f of fracs) { n *= f.n; d *= f.d; }
+  return fraction(n, d);
+}
+
+/** P(A or B) for mutually exclusive events. */
+function combineOr(...fracs) {
+  // bring to common denominator then add
+  let d = 1;
+  for (const f of fracs) d *= f.d;
+  let n = 0;
+  for (const f of fracs) n += f.n * (d / f.d);
+  return fraction(n, d);
+}
+
+function asPercent(frac, digits = 1) {
+  return (100 * frac.n / frac.d).toFixed(digits) + '%';
+}
+
+function asRatio(frac) { return `${frac.n}/${frac.d}`; }
+
+/** Pretty "1/4 (25,0%)" string, pt-BR decimal comma. */
+function format(frac) {
+  return `${asRatio(frac)} (${asPercent(frac).replace('.', ',')})`;
+}
+
+function equals(a, b) {
+  const fa = fraction(a.n, a.d), fb = fraction(b.n, b.d);
+  return fa.n === fb.n && fa.d === fb.d;
+}
+
+
+/* ===== js/genetics/punnett.js ===== */
+/* punnett.js — single-gene crosses with support for dominant/recessive,
+   incomplete dominance and codominance.
+
+   A genotype is a 2-char string of alleles, e.g. "Aa", "AA", "aa".
+   For multiple-allele systems (like ABO) any single-letter tokens work,
+   but blood.js handles ABO/Rh specifically. */
+
+/** All gametes (single alleles) from a genotype. */
+function gametes(genotype) {
+  return [genotype[0], genotype[1]];
+}
+
+/** Normalise a 2-allele genotype to a canonical order so "aA" === "Aa".
+   Uppercase (dominant) allele first, then alphabetical. */
+function canonical(genotype) {
+  const a = genotype[0], b = genotype[1];
+  const order = (x, y) => {
+    const xUp = x === x.toUpperCase(), yUp = y === y.toUpperCase();
+    if (xUp !== yUp) return xUp ? -1 : 1;           // uppercase first
+    return x < y ? -1 : x > y ? 1 : 0;
+  };
+  return order(a, b) <= 0 ? a + b : b + a;
+}
+
+/** Cross two genotypes -> { genotypeCounts: {AA:1,...}, total } */
+function cross(g1, g2) {
+  const counts = {};
+  for (const a of gametes(g1)) {
+    for (const b of gametes(g2)) {
+      const geno = canonical(a + b);
+      counts[geno] = (counts[geno] || 0) + 1;
+    }
+  }
+  return { genotypeCounts: counts, total: 4 };
+}
+
+/**
+ * Phenotype distribution from a cross.
+ * @param mode 'dominant' | 'incomplete' | 'codominant'
+ * @param dominantAllele the uppercase allele that dominates (for 'dominant')
+ * @param phenoNames optional map genotype->label
+ */
+function phenotypes(g1, g2, { mode = 'dominant', dominantAllele, phenoNames } = {}) {
+  const { genotypeCounts } = cross(g1, g2);
+  const pheno = {};
+  for (const [geno, count] of Object.entries(genotypeCounts)) {
+    let key;
+    if (phenoNames && phenoNames[geno]) {
+      key = phenoNames[geno];
+    } else if (mode === 'incomplete' || mode === 'codominant') {
+      key = geno;                               // every genotype is distinct
+    } else {
+      const dom = dominantAllele || guessDominant(geno);
+      key = geno.includes(dom) ? `dominante (${dom}_)` : `recessivo`;
+    }
+    pheno[key] = (pheno[key] || 0) + count;
+  }
+  return pheno;
+}
+
+function guessDominant(geno) {
+  for (const ch of geno) if (ch === ch.toUpperCase()) return ch;
+  return geno[0].toUpperCase();
+}
+
+/** Probability (out of 4) of a given canonical genotype among offspring. */
+function probGenotype(g1, g2, targetGeno) {
+  const t = canonical(targetGeno);
+  const { genotypeCounts } = cross(g1, g2);
+  return { n: genotypeCounts[t] || 0, d: 4 };
+}
+
+/** Probability offspring shows the recessive phenotype (homozygous recessive). */
+function probRecessivePhenotype(g1, g2, recessiveAllele) {
+  const { genotypeCounts } = cross(g1, g2);
+  let n = 0;
+  for (const [geno, c] of Object.entries(genotypeCounts)) {
+    if (geno[0] === recessiveAllele && geno[1] === recessiveAllele) n += c;
+  }
+  return { n, d: 4 };
+}
+
+
+/* ===== js/genetics/blood.js ===== */
+/* blood.js — ABO blood group (multiple alleles + codominance) and
+   Rh factor (simple dominant) inheritance.
+
+   ABO alleles: 'A' (Iᴬ), 'B' (Iᴮ), 'i' (recessive i).
+   Genotype examples: 'AA','Ai','BB','Bi','AB','ii'.
+   Rh genotype: pair of '+' (D, dominant) and '-' (d). */
+
+const ABO_PHENO = {
+  AA: 'A', Ai: 'A', iA: 'A',
+  BB: 'B', Bi: 'B', iB: 'B',
+  AB: 'AB', BA: 'AB',
+  ii: 'O',
+};
+
+function aboPhenotype(geno) {
+  const key = geno.length === 2 ? geno : geno;
+  return ABO_PHENO[key] || ABO_PHENO[geno[1] + geno[0]] || '?';
+}
+
+/** All ABO genotypes that produce a given phenotype. */
+function aboGenotypesFor(pheno) {
+  switch (pheno) {
+    case 'A':  return ['AA', 'Ai'];
+    case 'B':  return ['BB', 'Bi'];
+    case 'AB': return ['AB'];
+    case 'O':  return ['ii'];
+    default:   return [];
+  }
+}
+
+function bloodGametes(geno) { return [geno[0], geno[1]]; }
+
+/** Set of possible child ABO phenotypes from two parent phenotypes. */
+function possibleChildABO(phenoA, phenoB) {
+  const result = new Set();
+  for (const gA of aboGenotypesFor(phenoA)) {
+    for (const gB of aboGenotypesFor(phenoB)) {
+      for (const a of bloodGametes(gA)) {
+        for (const b of bloodGametes(gB)) {
+          result.add(aboPhenotype(a + b));
+        }
+      }
+    }
+  }
+  return result;
+}
+
+/** Rh: '+' dominant. Phenotypes from genotype pair of '+'/'-'. */
+function rhPhenotype(geno) { return geno.includes('+') ? '+' : '-'; }
+
+function rhGenotypesFor(pheno) {
+  return pheno === '+' ? ['++', '+-'] : ['--'];
+}
+
+function possibleChildRh(phenoA, phenoB) {
+  const result = new Set();
+  for (const gA of rhGenotypesFor(phenoA)) {
+    for (const gB of rhGenotypesFor(phenoB)) {
+      for (const a of bloodGametes(gA)) {
+        for (const b of bloodGametes(gB)) {
+          result.add(a === '+' || b === '+' ? '+' : '-');
+        }
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Can a (motherType, fatherType) pair biologically produce childType?
+ * Types are objects like { abo:'A', rh:'+' }.
+ */
+function canBeParents(child, p1, p2) {
+  const abo = possibleChildABO(p1.abo, p2.abo).has(child.abo);
+  const rh = possibleChildRh(p1.rh, p2.rh).has(child.rh);
+  return abo && rh;
+}
+
+/** Human-readable reason a pairing is impossible (or null if possible). */
+function impossibilityReason(child, p1, p2) {
+  if (!possibleChildABO(p1.abo, p2.abo).has(child.abo)) {
+    return `Pais ${p1.abo} × ${p2.abo} não podem gerar filho do tipo ${child.abo}.`;
+  }
+  if (!possibleChildRh(p1.rh, p2.rh).has(child.rh)) {
+    return `Pais Rh${p1.rh} × Rh${p2.rh} não podem gerar filho Rh${child.rh} ` +
+           `(dois pais Rh− só geram filhos Rh−).`;
+  }
+  return null;
+}
+
+function fullType(t) { return `${t.abo}${t.rh}`; }
+
+
+/* ===== js/genetics/pedigree.js ===== */
+/* pedigree.js — heredograma model, consistency checks, genotype
+   validation, and SVG rendering.
+
+   Member: {
+     id, sex: 'M'|'F', affected: bool,
+     gen: 0-based generation row, x: column position (relative),
+     parents: [idMother, idFather]  // optional
+   }
+
+   A "pattern" is { axis: 'autosomal'|'xlinked'|'ylinked', dominance: 'dominant'|'recessive' } */
+
+/* ---------- Phenotype <-> possible genotypes for a given pattern ---------- */
+// Allele convention: 'A' dominant, 'a' recessive (autosomal);
+// X-linked written as X^A / X^a, here tokens 'XA','Xa','Y'.
+
+function possibleGenotypes(member, pattern) {
+  const { axis, dominance } = pattern;
+  const aff = member.affected;
+  if (axis === 'autosomal') {
+    if (dominance === 'dominant') return aff ? ['AA', 'Aa'] : ['aa'];
+    return aff ? ['aa'] : ['AA', 'Aa'];
+  }
+  if (axis === 'xlinked') {
+    if (member.sex === 'M') {
+      // hemizygous: XA Y or Xa Y
+      if (dominance === 'recessive') return aff ? ['XaY'] : ['XAY'];
+      return aff ? ['XAY'] : ['XaY'];
+    } else { // female
+      if (dominance === 'recessive') return aff ? ['XaXa'] : ['XAXA', 'XAXa'];
+      return aff ? ['XAXA', 'XAXa'] : ['XaXa'];
+    }
+  }
+  if (axis === 'ylinked') {
+    if (member.sex === 'F') return ['XX'];
+    return aff ? ['XYa'] : ['XYA'];
+  }
+  return [];
+}
+
+/* ---------- Consistency: does a phenotype set fit the proposed pattern? ----------
+   Returns array of human-readable violations (empty == consistent). */
+function findViolations(members, pattern) {
+  const byId = Object.fromEntries(members.map(m => [m.id, m]));
+  const viol = [];
+  for (const m of members) {
+    if (!m.parents) continue;
+    const [mo, fa] = m.parents.map(id => byId[id]);
+    if (!mo || !fa) continue;
+
+    if (pattern.axis === 'autosomal' && pattern.dominance === 'recessive') {
+      // affected child of two unaffected is fine; unaffected child of two affected impossible
+      if (m.affected === false && mo.affected && fa.affected) {
+        viol.push(`${m.id}: dois pais afetados (recessivo) não teriam filho não-afetado.`);
+      }
+    }
+    if (pattern.axis === 'autosomal' && pattern.dominance === 'dominant') {
+      // affected child must have >=1 affected parent
+      if (m.affected && !mo.affected && !fa.affected) {
+        viol.push(`${m.id}: traço dominante não pode surgir de dois pais não-afetados.`);
+      }
+    }
+    if (pattern.axis === 'xlinked' && pattern.dominance === 'recessive') {
+      // affected father -> all daughters are carriers (not necessarily affected),
+      // affected daughter requires affected father
+      if (m.sex === 'F' && m.affected && !fa.affected) {
+        viol.push(`${m.id}: filha afetada (X recessivo) exige pai afetado.`);
+      }
+    }
+  }
+  return viol;
+}
+
+/* ---------- Validate the player's full genotype assignment ---------- */
+function validateAssignment(members, pattern, assignment) {
+  const errors = [];
+  for (const m of members) {
+    const g = assignment[m.id];
+    if (!g) { errors.push(`${m.id}: genótipo não preenchido.`); continue; }
+    const ok = possibleGenotypes(m, pattern).includes(g);
+    if (!ok) errors.push(`${m.id}: genótipo ${g} incompatível com o fenótipo/padrão.`);
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+/* ---------- SVG rendering of the heredograma ---------- */
+const NODE = 46, HGAP = 90, VGAP = 110, PAD = 30;
+
+function renderSVG(members, { width = 760 } = {}) {
+  const byId = Object.fromEntries(members.map(m => [m.id, m]));
+  // position: gen -> y; x provided in member.x (column units)
+  const xs = members.map(m => m.x);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const cols = maxX - minX;
+  const innerW = cols * HGAP;
+  const w = innerW + PAD * 2 + NODE;
+  const gens = Math.max(...members.map(m => m.gen));
+  const h = gens * VGAP + PAD * 2 + NODE;
+
+  const px = m => PAD + (m.x - minX) * HGAP;
+  const py = m => PAD + m.gen * VGAP;
+  const cx = m => px(m) + NODE / 2;
+  const cy = m => py(m) + NODE / 2;
+
+  let lines = '';
+  // draw parent-child connectors
+  const drawnMatings = new Set();
+  for (const m of members) {
+    if (!m.parents) continue;
+    const [mo, fa] = m.parents.map(id => byId[id]);
+    if (!mo || !fa) continue;
+    const key = [mo.id, fa.id].sort().join('|');
+    const midX = (cx(mo) + cx(fa)) / 2;
+    const matingY = cy(mo);
+    if (!drawnMatings.has(key)) {
+      lines += `<line x1="${cx(mo)}" y1="${matingY}" x2="${cx(fa)}" y2="${matingY}" class="ped-link"/>`;
+      drawnMatings.add(key);
+    }
+    const childTop = py(m);
+    lines += `<line x1="${midX}" y1="${matingY}" x2="${midX}" y2="${matingY + VGAP/2}" class="ped-link"/>`;
+    lines += `<line x1="${midX}" y1="${matingY + VGAP/2}" x2="${cx(m)}" y2="${matingY + VGAP/2}" class="ped-link"/>`;
+    lines += `<line x1="${cx(m)}" y1="${matingY + VGAP/2}" x2="${cx(m)}" y2="${childTop}" class="ped-link"/>`;
+  }
+
+  let shapes = '';
+  for (const m of members) {
+    const x = px(m), y = py(m);
+    const fill = m.affected ? 'var(--ink)' : 'var(--cream)';
+    const stroke = 'var(--ink)';
+    if (m.sex === 'M') {
+      shapes += `<rect x="${x}" y="${y}" width="${NODE}" height="${NODE}" rx="3"
+                  fill="${fill}" stroke="${stroke}" stroke-width="3"/>`;
+    } else {
+      shapes += `<circle cx="${x+NODE/2}" cy="${y+NODE/2}" r="${NODE/2}"
+                  fill="${fill}" stroke="${stroke}" stroke-width="3"/>`;
+    }
+    const labelColor = m.affected ? 'var(--cream)' : 'var(--ink)';
+    shapes += `<text x="${x+NODE/2}" y="${y+NODE/2+5}" text-anchor="middle"
+                 font-family="Cinzel, serif" font-size="14" fill="${labelColor}">${m.id}</text>`;
+  }
+
+  return `<svg viewBox="0 0 ${w} ${h}" width="${Math.min(width, w)}" role="img"
+            aria-label="Heredograma">
+      <style>.ped-link{stroke:var(--wood-dark);stroke-width:2.5;}</style>
+      ${lines}${shapes}
+    </svg>`;
+}
+
+
+/* ===== js/genetics/mutation.js ===== */
+/* mutation.js — classify the origin of a newly-appearing condition from
+   collected evidence clues. Used by Chapter 4.
+
+   Categories:
+     'espontanea'  — de novo, no clear external cause, present from birth
+     'germinativa' — arose in a parent's germ cells; heritable to offspring
+     'somatica'    — in body tissue only (e.g. a tumour); not heritable
+     'reparo'      — defective DNA repair (e.g. XP); often UV-linked, recessive */
+
+const MUTATION_TYPES = {
+  espontanea:  'Mutação espontânea (de novo)',
+  germinativa: 'Mutação germinativa',
+  somatica:    'Mutação somática',
+  reparo:      'Falha no reparo de DNA',
+};
+
+/**
+ * Each evidence clue carries weights toward categories.
+ * Player gathers clues; classify() sums the weights of gathered clues and
+ * returns the best-supported category plus a confidence margin.
+ */
+function classify(gatheredClues) {
+  const score = { espontanea: 0, germinativa: 0, somatica: 0, reparo: 0 };
+  for (const clue of gatheredClues) {
+    for (const [k, v] of Object.entries(clue.weights || {})) {
+      score[k] = (score[k] || 0) + v;
+    }
+  }
+  const sorted = Object.entries(score).sort((a, b) => b[1] - a[1]);
+  return {
+    score,
+    best: sorted[0][0],
+    margin: sorted[0][1] - (sorted[1] ? sorted[1][1] : 0),
+  };
+}
+
+/** Whether the player's chosen category matches the evidence's best answer. */
+function check(gatheredClues, chosen, expected) {
+  const c = classify(gatheredClues);
+  return { correct: chosen === expected, evidenceBest: c.best, score: c.score };
+}
+
+
+/* ===== js/data/svg.js ===== */
+/* svg.js — inline SVG art. Modular cartoon avatars (thick-outlined,
+   storybook), vine frames, crests, baby portraits and tool icons.
+   Traits (skin, hair, eyes) are parameterised so families can share
+   heritable features that the genetics actually drives. */
+
+const SKIN = {
+  fair:   '#f0c9a3', light: '#e6b487', tan: '#cf9a6a',
+  olive:  '#b07f50', brown: '#8a5a36', deep: '#5e3a22',
+};
+const HAIR = {
+  black: '#241a12', brown: '#5a3a1e', auburn: '#7a3416',
+  blond: '#cda24e', red: '#9c3b1a', gray: '#9a8f80', white: '#d8cfc2',
+};
+const EYES = {
+  brown: '#5a3a1e', hazel: '#7a5a2a', green: '#3f6b3f', blue: '#3f6f9e', gray: '#6f6f6f',
+};
+
+const OUT = '#2a1d10';     // thick outline colour
+const SW = 4;              // outline stroke width
+
+/* ---------- Vine frame wrapper (reusable) ---------- */
+function vineFrame(innerSVG, { color = '#5e8155' } = {}) {
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="pc"><circle cx="60" cy="58" r="42"/></clipPath>
+    </defs>
+    <g clip-path="url(#pc)">${innerSVG}</g>
+    <circle cx="60" cy="58" r="42" fill="none" stroke="${OUT}" stroke-width="5"/>
+    <!-- decorative vines/leaves around the frame -->
+    <g fill="${color}" stroke="${OUT}" stroke-width="2">
+      <path d="M18 58 q-8 -16 6 -26 q4 12 -6 26Z"/>
+      <path d="M102 58 q8 -16 -6 -26 q-4 12 6 26Z"/>
+      <ellipse cx="60" cy="14" rx="9" ry="5" transform="rotate(-18 60 14)"/>
+      <ellipse cx="60" cy="14" rx="9" ry="5" transform="rotate(18 60 14)"/>
+      <ellipse cx="30" cy="92" rx="8" ry="4.5" transform="rotate(28 30 92)"/>
+      <ellipse cx="90" cy="92" rx="8" ry="4.5" transform="rotate(-28 90 92)"/>
+    </g>
+  </svg>`;
+}
+
+/* ---------- Adult avatar ---------- */
+function avatar(traits = {}) {
+  const {
+    sex = 'F', skin = 'light', hair = 'brown', eyes = 'brown',
+    expression = 'neutral', accessory = null, age = 'adult',
+  } = traits;
+  const sc = SKIN[skin] || skin;
+  const hc = HAIR[hair] || hair;
+  const ec = EYES[eyes] || eyes;
+
+  const mouth = {
+    smile: `<path d="M48 78 q12 12 24 0" fill="none" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/>`,
+    neutral: `<path d="M50 80 h20" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/>`,
+    worried: `<path d="M48 82 q12 -8 24 0" fill="none" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/>`,
+  }[expression] || `<path d="M50 80 h20" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/>`;
+
+  // hair shape varies a touch by sex for silhouette variety
+  const hairShape = sex === 'F'
+    ? `<path d="M28 56 q-4 -40 32 -42 q36 2 32 42 q-6 -14 -16 -16 q4 8 0 14 q-16 -10 -32 0 q-4 -6 0 -14 q-12 4 -16 16Z" fill="${hc}" stroke="${OUT}" stroke-width="${SW}"/>`
+    : `<path d="M30 50 q-2 -36 30 -38 q32 2 30 38 q-8 -18 -30 -18 q-22 0 -30 18Z" fill="${hc}" stroke="${OUT}" stroke-width="${SW}"/>`;
+
+  const acc = {
+    crown: `<path d="M42 22 l6 10 6 -12 6 12 6 -10 -2 16 h-20Z" fill="#d9a73a" stroke="${OUT}" stroke-width="2.5"/>`,
+    glasses: `<g fill="none" stroke="${OUT}" stroke-width="3"><circle cx="48" cy="66" r="8"/><circle cx="72" cy="66" r="8"/><path d="M56 66 h8"/></g>`,
+    flower: `<g transform="translate(82 34)"><circle r="5" fill="#a8453a" stroke="${OUT}" stroke-width="2"/><circle r="2" fill="#e0b35e"/></g>`,
+    monocle: `<g fill="none" stroke="${OUT}" stroke-width="3"><circle cx="72" cy="66" r="8"/><path d="M72 74 v8"/></g>`,
+    null: '',
+  }[accessory] || '';
+
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="120" height="120" fill="none"/>
+    <!-- neck/shoulders -->
+    <path d="M30 120 q4 -28 30 -28 q26 0 30 28Z" fill="${sc}" stroke="${OUT}" stroke-width="${SW}"/>
+    <!-- head -->
+    <ellipse cx="60" cy="62" rx="30" ry="33" fill="${sc}" stroke="${OUT}" stroke-width="${SW}"/>
+    <!-- ears -->
+    <circle cx="30" cy="64" r="6" fill="${sc}" stroke="${OUT}" stroke-width="3"/>
+    <circle cx="90" cy="64" r="6" fill="${sc}" stroke="${OUT}" stroke-width="3"/>
+    ${hairShape}
+    <!-- eyes -->
+    <ellipse cx="48" cy="66" rx="4.5" ry="5.5" fill="#fff" stroke="${OUT}" stroke-width="2"/>
+    <ellipse cx="72" cy="66" rx="4.5" ry="5.5" fill="#fff" stroke="${OUT}" stroke-width="2"/>
+    <circle cx="48" cy="67" r="2.6" fill="${ec}"/>
+    <circle cx="72" cy="67" r="2.6" fill="${ec}"/>
+    <!-- brows -->
+    <path d="M42 57 q6 -3 12 0" fill="none" stroke="${OUT}" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M66 57 q6 -3 12 0" fill="none" stroke="${OUT}" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- nose -->
+    <path d="M60 68 v8 q-3 2 -5 2" fill="none" stroke="${OUT}" stroke-width="2.5" stroke-linecap="round"/>
+    ${mouth}
+    ${acc}
+  </svg>`;
+}
+
+/* ---------- Baby avatar (crib selection, reference 2) ---------- */
+function baby(traits = {}) {
+  const { skin = 'light', hair = 'brown', eyes = 'brown' } = traits;
+  const sc = SKIN[skin] || skin;
+  const hc = HAIR[hair] || hair;
+  const ec = EYES[eyes] || eyes;
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- swaddle -->
+    <path d="M26 120 q0 -34 34 -34 q34 0 34 34Z" fill="#eadfca" stroke="${OUT}" stroke-width="${SW}"/>
+    <!-- big head -->
+    <circle cx="60" cy="56" r="34" fill="${sc}" stroke="${OUT}" stroke-width="${SW}"/>
+    <!-- little hair curl -->
+    <path d="M48 30 q12 -14 24 0 q-8 -4 -12 0 q-4 -3 -12 0Z" fill="${hc}" stroke="${OUT}" stroke-width="3"/>
+    <!-- big eyes -->
+    <circle cx="48" cy="58" r="6" fill="#fff" stroke="${OUT}" stroke-width="2"/>
+    <circle cx="72" cy="58" r="6" fill="#fff" stroke="${OUT}" stroke-width="2"/>
+    <circle cx="49" cy="59" r="3.4" fill="${ec}"/>
+    <circle cx="73" cy="59" r="3.4" fill="${ec}"/>
+    <!-- cheeks -->
+    <circle cx="40" cy="70" r="4" fill="#e79b8a" opacity="0.7"/>
+    <circle cx="80" cy="70" r="4" fill="#e79b8a" opacity="0.7"/>
+    <!-- mouth -->
+    <path d="M54 74 q6 6 12 0" fill="none" stroke="${OUT}" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/* ---------- Crest / misc icons ---------- */
+const CREST = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 10 h40 v26 q0 18 -20 26 q-20 -8 -20 -26Z" fill="#7a2d24" stroke="#2a1d10" stroke-width="3"/>
+  <path d="M32 16 l4 8 -4 -2 -4 2Z" fill="#e0b35e"/>
+  <circle cx="32" cy="36" r="8" fill="#e0b35e" stroke="#2a1d10" stroke-width="2"/>
+  <path d="M32 30 v12 M26 36 h12" stroke="#7a2d24" stroke-width="2"/>
+</svg>`;
+
+const ICONS = {
+  pedigree: '🌳', blood: '🩸', chromosome: '🧬', mutation: '⚠️',
+  lineage: '👑', microscope: '🔬', dna: '🧪', database: '📚',
+  map: '🗺️', journal: '📜', tree: '🌿', baby: '👶',
+};
+
+/* tool emblem inner glyphs */
+function toolIcon(id) {
+  return ({
+    'kit-sangue': '🩸', 'microscopio': '🔬', 'analisador-cromossomos': '🧬',
+    'sequenciador': '🧪', 'banco-mutacoes': '📚', 'reconstrutor': '🌿',
+  })[id] || '🔧';
+}
+
+
+/* ===== js/data/protagonists.js ===== */
+/* protagonists.js — three playable investigators. Stats (0-5) gently
+   affect hints/attempts without changing the underlying science. */
+
+const PROTAGONISTS = [
+  {
+    id: 'alma',
+    name: 'Dra. Alma Vasconcelos',
+    role: 'Geneticista Forense',
+    blurb: 'Meticulosa e movida por evidências. Lê um cariótipo como quem lê um poema.',
+    stats: { analise: 5, deducao: 3, social: 2 },
+    perk: 'Começa cada análise laboratorial com uma pista parcial revelada.',
+    traits: { sex: 'F', skin: 'tan', hair: 'black', eyes: 'brown', accessory: 'glasses', expression: 'neutral' },
+  },
+  {
+    id: 'tomas',
+    name: 'Tomás Aguiar',
+    role: 'Investigador Dedutivo',
+    blurb: 'Pensa em probabilidades e hipóteses concorrentes. Erra menos quando o caso é lógico.',
+    stats: { analise: 3, deducao: 5, social: 2 },
+    perk: 'Ganha uma tentativa extra ao comparar hipóteses genéticas.',
+    traits: { sex: 'M', skin: 'light', hair: 'brown', eyes: 'hazel', accessory: 'monocle', expression: 'neutral' },
+  },
+  {
+    id: 'iara',
+    name: 'Iara Mendonça',
+    role: 'Conselheira Genética',
+    blurb: 'Conquista a confiança das famílias. Entrevistas revelam segredos que outros não alcançam.',
+    stats: { analise: 2, deducao: 3, social: 5 },
+    perk: 'Entrevistas e registros familiares revelam pistas adicionais.',
+    traits: { sex: 'F', skin: 'brown', hair: 'auburn', eyes: 'green', accessory: 'flower', expression: 'smile' },
+  },
+];
+
+function getProtagonist(id) { return PROTAGONISTS.find(p => p.id === id) || PROTAGONISTS[0]; }
+
+
+/* ===== js/data/codex.js ===== */
+/* codex.js — "Códice da Genética": concise pt-BR explanations of every
+   concept the game teaches. Entries unlock as concepts are encountered,
+   so the game explains before/while it assesses. */
+
+const CODEX = [
+  { id: 'mendel', titulo: '1ª e 2ª Leis de Mendel', chapter: 1,
+    texto: 'A 1ª Lei (segregação) diz que cada indivíduo possui dois alelos para cada característica, que se separam na formação dos gametas. A 2ª Lei (segregação independente) diz que alelos de genes diferentes se distribuem independentemente — válida para genes em cromossomos diferentes ou muito distantes.' },
+  { id: 'dom-rec', titulo: 'Dominante e Recessivo', chapter: 1,
+    texto: 'Um alelo dominante (A) manifesta seu fenótipo mesmo em heterozigose (Aa). Um alelo recessivo (a) só se manifesta em homozigose (aa). Por isso traços recessivos podem "pular" gerações.' },
+  { id: 'geno-feno', titulo: 'Genótipo × Fenótipo', chapter: 1,
+    texto: 'Genótipo é a constituição alélica (ex.: Aa). Fenótipo é a característica observável, resultado do genótipo + ambiente. Genótipos diferentes (AA e Aa) podem dar o mesmo fenótipo.' },
+  { id: 'heredograma', titulo: 'Análise de Heredograma', chapter: 1,
+    texto: 'Heredogramas (ou genealogias) usam quadrados (♂) e círculos (♀); preenchidos = afetados. Regras úteis: dois pais não-afetados com filho afetado → traço recessivo; traço que não pula gerações e exige pai/mãe afetado → dominante.' },
+  { id: 'sex-linked', titulo: 'Herança Ligada ao Sexo', chapter: 1,
+    texto: 'Genes no cromossomo X (ligados ao X) afetam mais homens em traços recessivos, pois eles têm um único X (hemizigotos). Pai afetado por traço X-recessivo transmite o alelo a todas as filhas (portadoras). Genes ligados ao Y passam só de pai para filho.' },
+  { id: 'autossomico', titulo: 'Herança Autossômica', chapter: 1,
+    texto: 'Traços autossômicos estão em cromossomos não-sexuais (1–22) e afetam homens e mulheres em proporções semelhantes. Podem ser dominantes (aparecem em toda geração) ou recessivos (podem pular gerações).' },
+  { id: 'alelos-multiplos', titulo: 'Alelos Múltiplos', chapter: 2,
+    texto: 'Alguns genes têm mais de dois alelos na população, embora cada indivíduo carregue apenas dois. O sistema ABO é o exemplo clássico: três alelos (Iᴬ, Iᴮ, i).' },
+  { id: 'abo', titulo: 'Sistema ABO', chapter: 2,
+    texto: 'Iᴬ e Iᴮ são codominantes entre si e ambos dominam i. Genótipos: A = IᴬIᴬ ou Iᴬi; B = IᴮIᴮ ou Iᴮi; AB = IᴬIᴮ; O = ii. Ex.: pais O × O só têm filhos O; um filho AB nunca tem pai/mãe O.' },
+  { id: 'codominancia', titulo: 'Codominância', chapter: 2,
+    texto: 'Na codominância, os dois alelos se expressam plenamente e simultaneamente no heterozigoto — sem mistura. Ex.: tipo AB expressa antígenos A e B ao mesmo tempo.' },
+  { id: 'rh', titulo: 'Fator Rh', chapter: 2,
+    texto: 'O fator Rh segue dominância simples: Rh+ (D) domina Rh− (d). Rh+ pode ser DD ou Dd; Rh− é sempre dd. Dois pais Rh− só geram filhos Rh−.' },
+  { id: 'dominancia-incompleta', titulo: 'Dominância Incompleta', chapter: 3,
+    texto: 'No heterozigoto surge um fenótipo intermediário entre os dois homozigotos (ex.: flor vermelha × branca → rosa). Diferente da codominância, há mistura/atenuação, não expressão simultânea.' },
+  { id: 'cariotipo', titulo: 'Cariótipo e Mapeamento', chapter: 3,
+    texto: 'O cariótipo organiza os cromossomos por tamanho e padrão de bandas. Permite detectar aneuploidias (ex.: trissomia do 21) e alterações estruturais (deleções, duplicações). O mapeamento cromossômico localiza genes e marcadores em pontos específicos.' },
+  { id: 'ligacao-genica', titulo: 'Ligação Gênica', chapter: 3,
+    texto: 'Genes próximos no mesmo cromossomo tendem a ser herdados juntos (ligados). A frequência de recombinação entre eles mede a distância no mapa genético (centimorgans).' },
+  { id: 'mutacoes', titulo: 'Mutações Genéticas', chapter: 4,
+    texto: 'Mutações são alterações na sequência do DNA. Podem ser espontâneas (de novo) ou induzidas; pontuais (substituição, inserção, deleção) ou cromossômicas.' },
+  { id: 'germinativa-somatica', titulo: 'Germinativa × Somática', chapter: 4,
+    texto: 'Mutação germinativa ocorre nas células reprodutivas e é transmitida aos descendentes. Mutação somática ocorre em células do corpo (ex.: pele), afeta só o indivíduo e não é herdada.' },
+  { id: 'reparo-dna', titulo: 'Reparo de DNA', chapter: 4,
+    texto: 'Mecanismos como reparo por excisão corrigem danos (ex.: dímeros de timina causados por UV). Falhas nesses sistemas (como no Xeroderma Pigmentoso) acumulam mutações e aumentam o risco de câncer.' },
+  { id: 'probabilidade', titulo: 'Probabilidade em Genética', chapter: 5,
+    texto: 'Use o quadro de Punnett para eventos simples. Para eventos independentes simultâneos, multiplique as probabilidades (regra do "e"); para eventos mutuamente exclusivos, some (regra do "ou").' },
+  { id: 'aconselhamento', titulo: 'Aconselhamento Genético', chapter: 5,
+    texto: 'O aconselhamento genético usa heredogramas, exames e cálculos de risco para orientar famílias sobre a probabilidade de uma condição, de forma ética, informativa e não-diretiva.' },
+];
+
+function codexById(id) { return CODEX.find(c => c.id === id); }
+
+
+/* ===== js/data/characters.js ===== */
+/* characters.js — the abandoned baby and the three suspect families.
+   The genetics across all chapters consistently points to one family
+   (Casa Drummond) and, ultimately, one couple. */
+
+const BABY = {
+  id: 'bebe',
+  nome: 'a criança enjeitada',
+  apelido: 'Linho',
+  blood: { abo: 'B', rh: '+' },
+  traits: { skin: 'tan', hair: 'black', eyes: 'green' },
+  // condition investigated in Chapter 4
+  condicao: 'uma mancha cutânea sensível à luz',
+};
+
+const FAMILIES = [
+  {
+    id: 'valverde',
+    nome: 'Casa Valverde',
+    cor: '#3f5d3a',
+    lema: 'Raízes profundas, folhas ao vento.',
+    membros: [
+      { nome: 'Bernardo Valverde', sex: 'M', blood: { abo: 'O', rh: '+' }, traits: { skin: 'light', hair: 'gray', eyes: 'blue' } },
+      { nome: 'Cláudia Valverde', sex: 'F', blood: { abo: 'O', rh: '-' }, traits: { skin: 'fair', hair: 'blond', eyes: 'blue' } },
+    ],
+    // Eliminated in Chapter 2: O × O não gera filho do tipo B.
+    eliminadaPor: 'sangue',
+  },
+  {
+    id: 'drummond',
+    nome: 'Casa Drummond',
+    cor: '#7a2d24',
+    lema: 'O sangue lembra o que a memória esquece.',
+    membros: [
+      { nome: 'Helena Drummond', sex: 'F', blood: { abo: 'B', rh: '+' }, traits: { skin: 'tan', hair: 'black', eyes: 'green' } },
+      { nome: 'Rafael Drummond', sex: 'M', blood: { abo: 'AB', rh: '-' }, traits: { skin: 'olive', hair: 'brown', eyes: 'brown' } },
+    ],
+    // Compatível em todos os exames — a verdadeira linhagem.
+    verdadeira: true,
+  },
+  {
+    id: 'reinwald',
+    nome: 'Casa Reinwald',
+    cor: '#3f6f9e',
+    lema: 'Gelo no nome, ferro no brasão.',
+    membros: [
+      { nome: 'Otto Reinwald', sex: 'M', blood: { abo: 'A', rh: '-' }, traits: { skin: 'fair', hair: 'red', eyes: 'gray' } },
+      { nome: 'Mathilde Reinwald', sex: 'F', blood: { abo: 'A', rh: '-' }, traits: { skin: 'fair', hair: 'auburn', eyes: 'hazel' } },
+    ],
+    // Eliminada: A− × A− não gera filho B nem Rh+.
+    eliminadaPor: 'sangue',
+  },
+];
+
+const TRUTH = {
+  familia: 'drummond',
+  mae: 'Helena Drummond',
+  pai: 'Rafael Drummond',
+  resumo:
+    'A criança é B+, com traço sensível à luz de origem recente. Apenas a Casa Drummond ' +
+    'sobrevive a todos os exames: Helena (B, Iᴮi) × Rafael (AB) podem gerar um filho B; ' +
+    'Helena Rh+ (Dd) × Rafael Rh− (dd) podem gerar Rh+; o marcador cromossômico e a ' +
+    'mutação de novo confirmam a ligação.',
+};
+
+function familyById(id) { return FAMILIES.find(f => f.id === id); }
+
+
+/* ===== js/data/chapters.js ===== */
+/* chapters.js — narrative metadata + location info for each chapter.
+   Puzzle data lives inside each chapter screen module; this file holds
+   titles, objectives, tool unlocks and codex links shown on the map. */
+
+const CHAPTERS = [
+  {
+    n: 1,
+    id: 'chapter1',
+    titulo: 'O Heredograma Esquecido',
+    local: 'Sótão da Mansão Drummond',
+    icon: '🌳',
+    resumo: 'Um heredograma empoeirado guarda o padrão de herança de um traço familiar.',
+    objetivo: 'Classifique o padrão de herança e atribua os genótipos.',
+    tool: null,
+    toolUnlock: 'microscopio',
+    codex: ['mendel', 'dom-rec', 'geno-feno', 'heredograma', 'sex-linked', 'autossomico'],
+  },
+  {
+    n: 2,
+    id: 'chapter2',
+    titulo: 'Laços de Sangue',
+    local: 'Laboratório de Hematologia',
+    icon: '🩸',
+    resumo: 'Amostras de sangue dos possíveis pais chegaram ao laboratório.',
+    objetivo: 'Use ABO e Rh para eliminar casais impossíveis.',
+    tool: 'kit-sangue',
+    toolUnlock: 'analisador-cromossomos',
+    codex: ['alelos-multiplos', 'abo', 'codominancia', 'rh'],
+  },
+  {
+    n: 3,
+    id: 'chapter3',
+    titulo: 'Detetive Cromossômico',
+    local: 'Sala de Citogenética',
+    icon: '🧬',
+    resumo: 'Cariótipos e mapas cromossômicos revelam marcadores e anomalias.',
+    objetivo: 'Identifique a anomalia e o marcador que liga a criança a um ramo.',
+    tool: 'analisador-cromossomos',
+    toolUnlock: 'sequenciador',
+    codex: ['dominancia-incompleta', 'cariotipo', 'ligacao-genica'],
+  },
+  {
+    n: 4,
+    id: 'chapter4',
+    titulo: 'O Mistério da Mutação',
+    local: 'Arquivo Médico & Banco de Mutações',
+    icon: '⚠️',
+    resumo: 'Uma condição surge na criança, ausente nas gerações anteriores.',
+    objetivo: 'Reúna pistas e classifique a origem da mutação.',
+    tool: 'banco-mutacoes',
+    toolUnlock: 'reconstrutor',
+    codex: ['mutacoes', 'germinativa-somatica', 'reparo-dna'],
+  },
+  {
+    n: 5,
+    id: 'chapter5',
+    titulo: 'A Linhagem Final',
+    local: 'Salão dos Retratos',
+    icon: '👑',
+    resumo: 'Todas as evidências convergem. Reconstrua a árvore e revele os pais.',
+    objetivo: 'Combine as provas, calcule a probabilidade e nomeie os pais biológicos.',
+    tool: 'reconstrutor',
+    toolUnlock: null,
+    codex: ['probabilidade', 'aconselhamento'],
+  },
+];
+
+const TOOLS = {
+  'kit-sangue': 'Kit de Tipagem Sanguínea',
+  'microscopio': 'Microscópio',
+  'analisador-cromossomos': 'Analisador de Cromossomos',
+  'sequenciador': 'Software de Sequenciamento de DNA',
+  'banco-mutacoes': 'Banco de Mutações',
+  'reconstrutor': 'Reconstrutor de Árvore Genealógica',
+};
+
+function chapterByN(n) { return CHAPTERS.find(c => c.n === n); }
+
+
+/* ===== js/state.js ===== */
+/* state.js — central game store with localStorage persistence. */
+
+const KEY = 'herdeiro-genetico-save-v1';
+
+const defaultState = () => ({
+  protagonist: null,        // id from data/protagonists.js
+  currentChapter: 1,        // 1..5
+  maxChapterUnlocked: 1,
+  toolsUnlocked: [],        // tool ids
+  evidence: [],             // {id, chapter, title, text}
+  codexUnlocked: [],        // concept ids
+  chapterDone: {},          // {1:true,...}
+  insight: 0,               // score / "pontos de perspicácia"
+  lineageSolved: false,
+});
+
+let state = defaultState();
+const listeners = new Set();
+
+function getState() { return state; }
+
+function subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); }
+function notify() { listeners.forEach(fn => fn(state)); }
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { state = { ...defaultState(), ...JSON.parse(raw) }; return true; }
+  } catch (e) { /* ignore */ }
+  return false;
+}
+
+function hasSave() {
+  try { return !!localStorage.getItem(KEY); } catch (e) { return false; }
+}
+
+function reset() { state = defaultState(); save(); notify(); }
+
+/* ---------- mutators ---------- */
+function setProtagonist(id) { state.protagonist = id; save(); notify(); }
+
+function addInsight(n) { state.insight += n; save(); notify(); }
+
+function unlockTool(id) {
+  if (!state.toolsUnlocked.includes(id)) { state.toolsUnlocked.push(id); save(); notify(); }
+}
+
+function unlockCodex(id) {
+  const ids = Array.isArray(id) ? id : [id];
+  let changed = false;
+  for (const i of ids) if (!state.codexUnlocked.includes(i)) { state.codexUnlocked.push(i); changed = true; }
+  if (changed) { save(); notify(); }
+}
+
+function addEvidence(ev) {
+  if (!state.evidence.find(e => e.id === ev.id)) { state.evidence.push(ev); save(); notify(); }
+}
+
+function completeChapter(n, { insight = 0, tool, codex } = {}) {
+  state.chapterDone[n] = true;
+  if (insight) state.insight += insight;
+  if (tool) unlockTool(tool);
+  if (codex) unlockCodex(codex);
+  if (n + 1 > state.maxChapterUnlocked) state.maxChapterUnlocked = Math.min(5, n + 1);
+  state.currentChapter = Math.min(5, n + 1);
+  save(); notify();
+}
+
+function hasTool(id) { return state.toolsUnlocked.includes(id); }
+
+
+/* ===== js/router.js ===== */
+/* router.js — minimal screen router. Screens register a render(app, params)
+   function. go(id, params) clears #app and renders. */
+
+const screens = new Map();
+let current = null;
+
+function register(id, renderFn) { screens.set(id, renderFn); }
+
+function go(id, params = {}) {
+  const app = document.getElementById('app');
+  const render = screens.get(id);
+  if (!render) { app.innerHTML = `<div class="panel">Tela desconhecida: ${id}</div>`; return; }
+  current = { id, params };
+  app.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'screen';
+  app.appendChild(wrap);
+  render(wrap, params);
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+function reload() { if (current) go(current.id, current.params); }
+function currentScreen() { return current; }
+
+
+/* ===== js/ui.js ===== */
+/* ui.js — small DOM helpers and reusable render fragments.
+   Keeps screens declarative without a framework. */
+
+/** Create an element from an HTML string (first root node). */
+function h(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+
+/** Escape user/content text for safe insertion. */
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+/** Event delegation helper: on(root, 'click', '.sel', handler). */
+function on(root, type, selector, handler) {
+  root.addEventListener(type, e => {
+    const target = e.target.closest(selector);
+    if (target && root.contains(target)) handler(e, target);
+  });
+}
+
+/** Transient toast message. */
+function toast(msg, kind = '') {
+  const layer = document.getElementById('toast-layer');
+  const el = h(`<div class="toast ${kind}">${esc(msg)}</div>`);
+  layer.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .4s'; }, 2200);
+  setTimeout(() => el.remove(), 2700);
+}
+
+/** Modal dialog. content is an HTML string. Returns a close() fn. */
+function modal(contentHTML, { onClose } = {}) {
+  const backdrop = h(`<div class="modal-backdrop"><div class="panel flourish modal">${contentHTML}</div></div>`);
+  document.body.appendChild(backdrop);
+  const close = () => { backdrop.remove(); onClose && onClose(); };
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+  backdrop.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', close));
+  return close;
+}
+
+/** Dialogue line block. */
+function dialogue(portraitSVG, speaker, line) {
+  return `<div class="dialogue">
+    <div class="portrait" style="width:64px;height:64px;flex:0 0 auto">${portraitSVG}</div>
+    <div><div class="speaker">${esc(speaker)}</div><p class="line">${line}</p></div>
+  </div>`;
+}
+
+/** Sticky cheat-sheet note (genetics rule). bodyHTML allows lists. */
+function note(title, bodyHTML, tag = '✦') {
+  return `<div class="note"><span class="tag">${tag}</span><h4>${esc(title)}</h4>${bodyHTML}</div>`;
+}
+
+/** Stat bar row. */
+function statBar(label, value, max = 5, kind = 'skill') {
+  const pct = Math.round((value / max) * 100);
+  return `<div class="label">${esc(label)}</div>
+          <div class="bar ${kind}"><span style="width:${pct}%"></span></div>`;
+}
+
+/** Scientific feedback block. */
+function feedback(text, kind = '') {
+  return `<div class="feedback ${kind}">${text}</div>`;
+}
+
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+
+/* ===== js/screens/common.js ===== */
+/* common.js — shared screen fragments: top game bar, objective banner,
+   chapter scaffolding used by every chapter screen. */
+
+
+function gamebar(node) {
+  const s = getState();
+  const p = getProtagonist(s.protagonist);
+  const bar = document.createElement('div');
+  bar.className = 'gamebar';
+  bar.innerHTML = `
+    <span class="crest" title="${p.name}" style="width:38px;display:inline-block">${avatar({ ...p.traits })}</span>
+    <span class="title">Herdeiro Genético</span>
+    <span class="spacer"></span>
+    <span class="insight pill gold" title="Pontos de perspicácia">✦ ${s.insight}</span>
+    <button class="btn small" data-go="map">🗺️ Mapa</button>
+    <button class="btn small ghost" data-go="journal">📜 Diário</button>
+  `;
+  node.appendChild(bar);
+  on(bar, 'click', '[data-go]', (e, t) => go(t.dataset.go));
+  return bar;
+}
+
+function objective(text) {
+  const el = document.createElement('div');
+  el.className = 'objective';
+  el.innerHTML = `<span class="obj-icon">🎯</span><div><strong>Objetivo:</strong> ${text}</div>`;
+  return el;
+}
+
+function chapterShell(node, chapter, bodyFn) {
+  if (chapter.tool) unlockTool(chapter.tool); // grant the tool this chapter uses
+  gamebar(node);
+  const head = document.createElement('div');
+  head.className = 'panel flourish';
+  head.style.marginTop = '14px';
+  head.innerHTML = `
+    <div class="row" style="align-items:center">
+      <div style="font-size:2.4rem">${chapter.icon}</div>
+      <div class="grow">
+        <h2 style="margin:0">Capítulo ${chapter.n} — ${chapter.titulo}</h2>
+        <div class="muted">${chapter.local}</div>
+      </div>
+    </div>
+    <p style="margin-top:10px">${chapter.resumo}</p>
+  `;
+  node.appendChild(head);
+  node.appendChild(objective(chapter.objetivo));
+  const body = document.createElement('div');
+  body.className = 'stack';
+  body.style.marginTop = '16px';
+  node.appendChild(body);
+  bodyFn(body);
+}
+
+
+/* ===== js/screens/title.js ===== */
+/* title.js — storybook cover screen. */
+
+
+register('title', (node) => {
+  const cont = hasSave();
+  node.innerHTML = `
+    <div class="title-screen">
+      <div class="crest-big">🜂</div>
+      <div style="width:120px;margin:0 auto">${CREST}</div>
+      <h1>Herdeiro Genético</h1>
+      <div class="subtitle">A Linhagem Perdida</div>
+      <div class="menu">
+        <button class="btn primary" data-act="new">📖 Nova Investigação</button>
+        <button class="btn ${cont ? '' : 'ghost'}" data-act="continue" ${cont ? '' : 'disabled'}>
+          ${cont ? '↪️ Continuar' : 'Continuar (sem progresso salvo)'}
+        </button>
+        <button class="btn ghost" data-act="about">❧ Sobre o Jogo</button>
+      </div>
+      <div class="panel flourish blurb">
+        <p>Numa cidade onde linhagens antigas guardam segredos, uma criança é encontrada
+        em circunstâncias misteriosas. Você é um jovem investigador genético: através de
+        heredogramas, exames de sangue, cariótipos e análise de mutações, descubra a
+        verdadeira origem biológica da criança.</p>
+        <p class="muted">Jogo educativo de Genética • Biologia, Biomedicina, Medicina e Veterinária</p>
+      </div>
+    </div>
+  `;
+
+  on(node, 'click', '[data-act]', (e, t) => {
+    const act = t.dataset.act;
+    if (act === 'new') { reset(); go('protagonist'); }
+    if (act === 'continue') { if (load()) go('map'); }
+    if (act === 'about') showAbout();
+  });
+});
+
+function showAbout() {
+  modal(`
+      <h2>Sobre o Jogo</h2>
+      <p>Cada capítulo apresenta um desafio real de genética — não um questionário.
+      Você constrói heredogramas, preenche genótipos, calcula probabilidades, interpreta
+      exames laboratoriais e compara hipóteses para justificar suas conclusões com evidências.</p>
+      <p><strong>Conceitos abordados:</strong> Leis de Mendel, dominância/recessividade,
+      dominância incompleta, codominância, alelos múltiplos, sistema ABO, fator Rh, herança
+      ligada ao sexo, herança autossômica, análise de heredograma, mapeamento cromossômico,
+      mutações, reparo de DNA, probabilidade e aconselhamento genético.</p>
+      <div class="center" style="margin-top:14px"><button class="btn" data-close>Fechar</button></div>
+    `);
+}
+
+
+/* ===== js/screens/protagonist.js ===== */
+/* protagonist.js — choose one of three investigators. */
+
+
+register('protagonist', (node) => {
+  node.innerHTML = `<h1 class="center">Escolha seu Investigador</h1>
+    <p class="center muted">Cada perfil tem forças diferentes em análise, dedução e interação social.
+    A ciência é a mesma — mas as pistas e tentativas variam.</p>`;
+  const grid = document.createElement('div');
+  grid.className = 'protagonist-grid';
+  grid.innerHTML = PROTAGONISTS.map(p => `
+    <div class="card selectable" data-id="${p.id}">
+      <div class="portrait">${vineFrame(avatar(p.traits))}</div>
+      <h3 style="margin:8px 0 0">${p.name}</h3>
+      <div class="pill blood">${p.role}</div>
+      <p style="margin:10px 0">${p.blurb}</p>
+      <div class="statline">
+        ${statBar('Análise', p.stats.analise)}
+        ${statBar('Dedução', p.stats.deducao, 5, 'health')}
+        ${statBar('Social', p.stats.social, 5, 'skill')}
+      </div>
+      <div class="note" style="transform:none;max-width:none;margin-top:12px;font-size:1.05rem">
+        <strong>Talento:</strong> ${p.perk}
+      </div>
+      <button class="btn primary block" style="margin-top:12px" data-pick="${p.id}">Escolher</button>
+    </div>
+  `).join('');
+  node.appendChild(grid);
+
+  on(node, 'click', '[data-pick]', (e, t) => {
+    setProtagonist(t.dataset.pick);
+    go('map');
+  });
+});
+
+
+/* ===== js/screens/map.js ===== */
+/* map.js — location hub. Travel to chapters, see unlocked tools. */
+
+
+register('map', (node) => {
+  gamebar(node);
+  const s = getState();
+
+  const intro = document.createElement('div');
+  intro.className = 'panel flourish';
+  intro.style.marginTop = '14px';
+  intro.innerHTML = `
+    <h2 style="margin:0">Mapa da Investigação</h2>
+    <p class="muted">Viaje entre os locais para reunir evidências. Cada caso bem-sucedido
+    desbloqueia uma nova ferramenta de laboratório e o próximo local.</p>`;
+  node.appendChild(intro);
+
+  const grid = document.createElement('div');
+  grid.className = 'map-grid';
+  grid.innerHTML = CHAPTERS.map(c => {
+    const unlocked = c.n <= s.maxChapterUnlocked;
+    const done = s.chapterDone[c.n];
+    return `
+      <div class="panel location ${unlocked ? '' : 'locked'}" data-chapter="${unlocked ? c.n : ''}">
+        ${done ? '<span class="pill leaf lock-tag">✔ Concluído</span>'
+               : (!unlocked ? '<span class="pill lock-tag">🔒</span>' : '')}
+        <div class="loc-icon">${c.icon}</div>
+        <h3 style="margin:0">Cap. ${c.n} — ${c.titulo}</h3>
+        <div class="muted">${c.local}</div>
+        <p style="margin:6px 0 0;font-size:0.95rem">${c.resumo}</p>
+        ${unlocked ? `<button class="btn ${done ? '' : 'primary'} small" style="margin-top:auto" data-enter="${c.n}">
+            ${done ? 'Revisitar' : 'Investigar'}</button>` : ''}
+      </div>`;
+  }).join('');
+  node.appendChild(grid);
+
+  // Tool tray
+  const tray = document.createElement('div');
+  tray.className = 'panel tooltray';
+  const toolIds = Object.keys(TOOLS);
+  tray.innerHTML = `<strong style="font-family:var(--font-display)">Ferramentas:</strong>` +
+    toolIds.map(id => {
+      const has = s.toolsUnlocked.includes(id);
+      return `<div class="tool">
+        <span class="emblem ${has ? '' : 'locked'}" title="${TOOLS[id]}">${toolIcon(id)}</span>
+        <span>${has ? TOOLS[id] : '???'}</span>
+      </div>`;
+    }).join('');
+  node.appendChild(tray);
+
+  on(node, 'click', '[data-enter]', (e, t) => go('chapter' + t.dataset.enter));
+});
+
+
+/* ===== js/screens/journal.js ===== */
+/* journal.js — evidence log + Códice da Genética (concept reference). */
+
+
+register('journal', (node) => {
+  gamebar(node);
+  const s = getState();
+
+  const evWrap = document.createElement('div');
+  evWrap.className = 'panel flourish';
+  evWrap.style.marginTop = '14px';
+  evWrap.innerHTML = `<h2>📜 Diário de Evidências</h2>` + (
+    s.evidence.length
+      ? `<div class="stack">${s.evidence.map(e => `
+          <div class="card"><h4>Cap. ${e.chapter} — ${e.title}</h4><p style="margin:0">${e.text}</p></div>
+        `).join('')}</div>`
+      : `<p class="muted">Nenhuma evidência coletada ainda. Comece a investigar no mapa.</p>`
+  );
+  node.appendChild(evWrap);
+
+  const codexWrap = document.createElement('div');
+  codexWrap.className = 'panel flourish';
+  codexWrap.style.marginTop = '16px';
+  codexWrap.innerHTML = `<h2>📚 Códice da Genética</h2>
+    <p class="muted">Conceitos são revelados conforme você os encontra na investigação.</p>
+    <div class="codex-list">${CODEX.map(c => {
+      const unlocked = s.codexUnlocked.includes(c.id);
+      return `<div class="card codex-entry ${unlocked ? '' : 'locked'}">
+        <h4>${unlocked ? c.titulo : '🔒 Conceito bloqueado'}</h4>
+        ${unlocked ? `<p style="margin:0">${c.texto}</p>`
+                   : `<p class="lock" style="margin:0">Descubra-o em campo (Cap. ${c.chapter}).</p>`}
+      </div>`;
+    }).join('')}</div>`;
+  node.appendChild(codexWrap);
+});
+
+
+/* ===== js/screens/chapter1.js ===== */
+/* chapter1.js — O Heredograma Esquecido.
+   Player classifies the inheritance pattern (axis + dominance) and assigns
+   genotypes to key family members. Validated against pedigree.js. */
+
+
+// --- Puzzle: an X-linked recessive trait (only males affected; carrier mothers) ---
+const MEMBERS = [
+  { id: 'I-1',  sex: 'M', affected: false, gen: 0, x: 2 },
+  { id: 'I-2',  sex: 'F', affected: false, gen: 0, x: 3 },                 // carrier
+  { id: 'II-2', sex: 'M', affected: false, gen: 1, x: 0 },                 // married in
+  { id: 'II-1', sex: 'F', affected: false, gen: 1, x: 1, parents: ['I-2', 'I-1'] }, // carrier
+  { id: 'II-3', sex: 'M', affected: true,  gen: 1, x: 4, parents: ['I-2', 'I-1'] },
+  { id: 'II-4', sex: 'F', affected: false, gen: 1, x: 5 },                 // married in
+  { id: 'III-1', sex: 'M', affected: true,  gen: 2, x: 0.5, parents: ['II-1', 'II-2'] },
+  { id: 'III-2', sex: 'F', affected: false, gen: 2, x: 1.5, parents: ['II-1', 'II-2'] },
+  { id: 'III-3', sex: 'F', affected: false, gen: 2, x: 4.5, parents: ['II-4', 'II-3'] }, // obligate carrier
+];
+
+const PATTERN = { axis: 'xlinked', dominance: 'recessive' };
+
+// curated genotype questions with required answers + teaching feedback
+const GENO_Q = [
+  { id: 'II-3', required: 'XaY',  hint: 'Homem afetado por traço X-recessivo é hemizigoto Xᵃ Y.' },
+  { id: 'III-1', required: 'XaY', hint: 'Filho afetado de pais não-afetados: recebeu Xᵃ da mãe portadora.' },
+  { id: 'I-2',  required: 'XAXa', hint: 'Mãe não-afetada com filho afetado é obrigatoriamente portadora (XᴬXᵃ).' },
+  { id: 'III-3', required: 'XAXa', hint: 'Toda filha de homem afetado (Xᵃ Y) herda o Xᵃ dele → portadora obrigatória.' },
+];
+
+register('chapter1', (node) => {
+  const ch = chapterByN(1);
+  chapterShell(node, ch, (body) => {
+    const s = getState();
+
+    // Cheat-sheet note + pedigree
+    const top = document.createElement('div');
+    top.className = 'row';
+    top.innerHTML = `
+      <div class="panel flourish grow" style="min-width:320px">
+        <h3>Heredograma da Família</h3>
+        <div class="pedigree">${renderSVG(MEMBERS)}</div>
+        <div class="pedigree-legend">
+          <span><i class="legend-swatch sq"></i> ♂ Homem</span>
+          <span><i class="legend-swatch ci"></i> ♀ Mulher</span>
+          <span><i class="legend-swatch sq filled"></i> Afetado</span>
+        </div>
+      </div>
+      <div style="flex:0 0 300px">
+        ${note('Pistas de Leitura', `<ul>
+          <li>2 pais não-afetados com filho afetado → <b>recessivo</b></li>
+          <li>Só homens afetados → suspeite de <b>ligado ao X</b></li>
+          <li>Filha de homem afetado X-rec. → <b>portadora</b></li>
+        </ul>`, '🔍')}
+      </div>`;
+    body.appendChild(top);
+
+    // Question 1: axis
+    const q = document.createElement('div');
+    q.className = 'panel flourish';
+    q.innerHTML = `
+      <h3>1 · Onde está o gene?</h3>
+      <div class="row" data-group="axis">
+        <div class="card selectable grow" data-axis="autosomal"><h4>Autossômico</h4>
+          <p style="margin:0">Em cromossomo não-sexual; afeta ♂ e ♀ igualmente.</p></div>
+        <div class="card selectable grow" data-axis="xlinked"><h4>Ligado ao X</h4>
+          <p style="margin:0">No cromossomo X; padrão diferente entre sexos.</p></div>
+      </div>
+      <h3 style="margin-top:14px">2 · Dominante ou recessivo?</h3>
+      <div class="row" data-group="dom">
+        <div class="card selectable grow" data-dom="dominant"><h4>Dominante</h4>
+          <p style="margin:0">Aparece em toda geração; exige pai/mãe afetado.</p></div>
+        <div class="card selectable grow" data-dom="recessive"><h4>Recessivo</h4>
+          <p style="margin:0">Pode pular gerações; surge de pais não-afetados.</p></div>
+      </div>
+      <div id="cls-feedback"></div>`;
+    body.appendChild(q);
+
+    let pick = { axis: null, dom: null };
+    on(q, 'click', '[data-axis]', (e, t) => {
+      pick.axis = t.dataset.axis;
+      q.querySelectorAll('[data-axis]').forEach(c => c.classList.remove('chosen'));
+      t.classList.add('chosen');
+    });
+    on(q, 'click', '[data-dom]', (e, t) => {
+      pick.dom = t.dataset.dom;
+      q.querySelectorAll('[data-dom]').forEach(c => c.classList.remove('chosen'));
+      t.classList.add('chosen');
+    });
+
+    // Genotype assignment panel (revealed after correct classification)
+    const genoPanel = document.createElement('div');
+    genoPanel.className = 'panel flourish hidden';
+    genoPanel.innerHTML = `<h3>3 · Atribua os genótipos</h3>
+      <p class="muted">Com o padrão definido, complete os genótipos dos indivíduos-chave.</p>
+      <div id="geno-rows"></div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn primary" id="check-geno">Validar genótipos</button>
+      </div>
+      <div id="geno-feedback"></div>`;
+    body.appendChild(genoPanel);
+
+    // classification check button
+    const clsBtn = document.createElement('div');
+    clsBtn.className = 'center';
+    clsBtn.innerHTML = `<button class="btn primary" id="check-cls">Confirmar padrão de herança</button>`;
+    q.appendChild(clsBtn);
+
+    on(q, 'click', '#check-cls', () => {
+      if (!pick.axis || !pick.dom) { toast('Escolha as duas opções.', 'bad'); return; }
+      const fb = q.querySelector('#cls-feedback');
+      const axisOk = pick.axis === PATTERN.axis;
+      const domOk = pick.dom === PATTERN.dominance;
+      if (axisOk && domOk) {
+        // sanity: no violations under this pattern
+        const viol = findViolations(MEMBERS, PATTERN);
+        fb.innerHTML = feedback(
+          `<strong>Correto!</strong> Apenas homens são afetados e a condição surge de pais
+           não-afetados — assinatura de herança <b>ligada ao X, recessiva</b>.
+           ${viol.length ? '' : 'Nenhuma inconsistência no heredograma.'}`, 'good');
+        unlockCodex(['sex-linked', 'dom-rec', 'heredograma']);
+        buildGenoRows();
+        genoPanel.classList.remove('hidden');
+        genoPanel.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        const tips = [];
+        if (!axisOk) tips.push('Observe quem é afetado: se só homens, pense no cromossomo X.');
+        if (!domOk) tips.push('Pais não-afetados com filho afetado indicam alelo recessivo.');
+        fb.innerHTML = feedback(`<strong>Ainda não.</strong> ${tips.join(' ')}`, 'bad');
+      }
+    });
+
+    function buildGenoRows() {
+      const rows = genoPanel.querySelector('#geno-rows');
+      rows.innerHTML = GENO_Q.map(g => {
+        const m = MEMBERS.find(mm => mm.id === g.id);
+        const opts = possibleGenotypes(m, PATTERN);
+        // include a couple of plausible distractors for females
+        const allOpts = m.sex === 'F'
+          ? Array.from(new Set([...opts, 'XAXA', 'XAXa', 'XaXa']))
+          : Array.from(new Set([...opts, 'XAY', 'XaY']));
+        return `<div class="geno-row">
+          <span><b>${g.id}</b> — ${m.affected ? 'afetado' : 'não-afetado'} (${m.sex === 'M' ? '♂' : '♀'})</span>
+          <select data-geno="${g.id}">
+            <option value="">—</option>
+            ${allOpts.map(o => `<option value="${o}">${fmtGeno(o)}</option>`).join('')}
+          </select>
+        </div>`;
+      }).join('');
+    }
+
+    on(genoPanel, 'click', '#check-geno', () => {
+      const fb = genoPanel.querySelector('#geno-feedback');
+      const errs = [];
+      for (const g of GENO_Q) {
+        const sel = genoPanel.querySelector(`[data-geno="${g.id}"]`);
+        const val = sel.value;
+        const m = MEMBERS.find(mm => mm.id === g.id);
+        const row = sel.closest('.geno-row');
+        row.classList.remove('chosen', 'wrong');
+        // must be phenotype-consistent AND match the deduced required genotype
+        const phenoOk = possibleGenotypes(m, PATTERN).includes(val);
+        if (val === g.required && phenoOk) { row.classList.add('chosen'); }
+        else { row.classList.add('wrong'); errs.push(`${g.id}: ${g.hint}`); }
+      }
+      if (errs.length === 0) {
+        fb.innerHTML = feedback(`<strong>Heredograma resolvido!</strong> Todos os genótipos
+          são consistentes com herança X-recessiva. As mães não-afetadas de filhos afetados
+          são portadoras obrigatórias.`, 'good');
+        finish();
+      } else {
+        fb.innerHTML = feedback(`<strong>Revise:</strong><ul>${errs.map(e => `<li>${esc(e)}</li>`).join('')}</ul>`, 'bad');
+      }
+    });
+
+    function finish() {
+      if (getState().chapterDone[1]) return;
+      addEvidence({ id: 'ev-pedigree', chapter: 1, title: 'Padrão de herança',
+        text: 'O traço familiar é ligado ao X, recessivo. Mães não-afetadas de afetados são portadoras (XᴬXᵃ).' });
+      completeChapter(1, { insight: 100, tool: 'microscopio', codex: chapterByN(1).codex });
+      setTimeout(() => {
+        toast('✦ +100 perspicácia · Microscópio desbloqueado!', 'good');
+        afterChapter(node, 1);
+      }, 600);
+    }
+  });
+});
+
+function fmtGeno(g) {
+  return g.replace(/X([AaB])/g, (m, a) => 'X' + sup(a)).replace(/Y([Aa])?/, (m, a) => 'Y' + (a ? sup(a) : ''));
+}
+function sup(c) { return ({ A: 'ᴬ', a: 'ᵃ', B: 'ᴮ' })[c] || c; }
+
+function afterChapter(node, n) {
+  const next = n + 1;
+  modal(`
+    <h2>Capítulo ${n} concluído ✔</h2>
+    <p>Uma nova ferramenta foi adicionada ao seu laboratório e o próximo local está aberto.</p>
+    <div class="center row" style="justify-content:center;margin-top:14px">
+      <button class="btn" data-close>Ficar aqui</button>
+      ${next <= 5 ? `<button class="btn primary" id="go-next">Ir ao Capítulo ${next} →</button>` : `<button class="btn primary" id="go-end">Ver desfecho →</button>`}
+    </div>
+  `, {});
+  const nx = document.getElementById('go-next');
+  const ge = document.getElementById('go-end');
+  if (nx) nx.addEventListener('click', () => go('chapter' + next));
+  if (ge) ge.addEventListener('click', () => go('ending'));
+}
+
+
+/* ===== js/screens/chapter2.js ===== */
+/* chapter2.js — Laços de Sangue.
+   Player runs the blood-typing kit and judges each candidate couple as
+   compatible or impossible for the baby (B+), justified by ABO/Rh rules. */
+
+
+register('chapter2', (node) => {
+  const ch = chapterByN(2);
+  chapterShell(node, ch, (body) => {
+    const child = BABY.blood; // {abo:'B', rh:'+'}
+
+    const intro = document.createElement('div');
+    intro.className = 'row';
+    intro.innerHTML = `
+      <div class="panel flourish grow" style="min-width:300px">
+        <h3>Resultado da criança</h3>
+        <p style="font-size:1.3rem">Tipo sanguíneo: <span class="pill blood">${fullType(child)}</span></p>
+        <p class="muted">Cada casal foi tipado. Decida quais combinações são biologicamente
+        possíveis como pais — e quais devem ser eliminadas.</p>
+      </div>
+      <div style="flex:0 0 320px">
+        ${note('Regras do Sangue', `<ul>
+          <li>O × O → só filhos <b>O</b></li>
+          <li>Filho <b>AB</b> nunca tem pai/mãe O</li>
+          <li>Rh− × Rh− → só filhos <b>Rh−</b></li>
+          <li>Iᴬ e Iᴮ são <b>codominantes</b></li>
+        </ul>`, '🩸')}
+      </div>`;
+    body.appendChild(intro);
+
+    const couples = FAMILIES.map(f => {
+      const [a, b] = f.membros;
+      return { fam: f, a, b, possible: canBeParents(child, a.blood, b.blood) };
+    });
+
+    const decided = {};   // famId -> 'compativel' | 'impossivel'
+
+    const grid = document.createElement('div');
+    grid.className = 'panel flourish';
+    grid.innerHTML = `<h3>Casais candidatos</h3>
+      <div class="blood-cross">${couples.map(c => `
+        <div class="card" data-fam="${c.fam.id}">
+          <h4 style="color:${c.fam.cor}">${c.fam.nome}</h4>
+          <p style="margin:4px 0">
+            ${esc(c.a.nome)} <span class="pill blood">${fullType(c.a.blood)}</span><br>
+            ${esc(c.b.nome)} <span class="pill blood">${fullType(c.b.blood)}</span>
+          </p>
+          <div class="row" style="gap:8px">
+            <button class="btn success small" data-decide="compativel" data-fam="${c.fam.id}">✔ Compatível</button>
+            <button class="btn small" data-decide="impossivel" data-fam="${c.fam.id}">✘ Impossível</button>
+          </div>
+          <div class="verdict" data-verdict="${c.fam.id}"></div>
+        </div>`).join('')}</div>
+      <div class="center" style="margin-top:14px">
+        <button class="btn primary" id="conclude" disabled>Concluir análise</button>
+      </div>
+      <div id="c2-feedback"></div>`;
+    body.appendChild(grid);
+
+    on(grid, 'click', '[data-decide]', (e, t) => {
+      const famId = t.dataset.fam;
+      const decision = t.dataset.decide;
+      const c = couples.find(x => x.fam.id === famId);
+      const correct = (decision === 'compativel') === c.possible;
+      const vEl = grid.querySelector(`[data-verdict="${famId}"]`);
+      const card = grid.querySelector(`.card[data-fam="${famId}"]`);
+      card.classList.remove('wrong', 'chosen');
+
+      if (correct) {
+        decided[famId] = decision;
+        card.classList.add('chosen');
+        if (c.possible) {
+          vEl.innerHTML = feedback(`<strong>Correto — compatível.</strong>
+            Filhos possíveis (ABO): ${[...possibleChildABO(c.a.blood.abo, c.b.blood.abo)].join(', ')};
+            Rh: ${[...possibleChildRh(c.a.blood.rh, c.b.blood.rh)].join(', ')}.
+            Inclui ${fullType(child)}.`, 'good');
+        } else {
+          vEl.innerHTML = feedback(`<strong>Correto — eliminado.</strong>
+            ${esc(impossibilityReason(child, c.a.blood, c.b.blood))}`, 'good');
+        }
+      } else {
+        card.classList.add('wrong');
+        const reason = impossibilityReason(child, c.a.blood, c.b.blood);
+        vEl.innerHTML = feedback(`<strong>Reveja.</strong> ` +
+          (c.possible
+            ? `Este casal <em>pode</em> gerar ${fullType(child)} — não elimine ainda.`
+            : esc(reason)), 'bad');
+        delete decided[famId];
+      }
+      const all = couples.every(x => decided[x.fam.id]);
+      grid.querySelector('#conclude').disabled = !all;
+    });
+
+    on(grid, 'click', '#conclude', () => {
+      const fb = grid.querySelector('#c2-feedback');
+      const survivor = couples.find(c => c.possible);
+      fb.innerHTML = feedback(`<strong>Análise concluída.</strong> Dois casais foram
+        eliminados pelo sangue. Resta <b>${survivor.fam.nome}</b> como compatível —
+        mas a compatibilidade sanguínea <em>não prova</em> a paternidade; ela apenas
+        <em>exclui</em> os impossíveis. Será preciso mais evidência.`, 'good');
+      unlockCodex(chapterByN(2).codex);
+      if (!getState().chapterDone[2]) {
+        addEvidence({ id: 'ev-blood', chapter: 2, title: 'Exclusão por sangue',
+          text: `Criança ${fullType(child)}. Casa Valverde (O×O) e Casa Reinwald (A−×A−) eliminadas. Casa Drummond (B+ × AB−) compatível.` });
+        completeChapter(2, { insight: 120, tool: chapterByN(2).toolUnlock, codex: chapterByN(2).codex });
+        setTimeout(() => { toast('✦ +120 perspicácia · Analisador de Cromossomos desbloqueado!', 'good'); afterChapter(node, 2); }, 700);
+      }
+    });
+  });
+});
+
+
+/* ===== js/screens/chapter3.js ===== */
+/* chapter3.js — Detetive Cromossômico.
+   Task A: flag the chromosome with a structural abnormality on the karyotype.
+   Task B: use an incomplete-dominance pigment marker to tie the child to a
+   family branch (intermediate heterozygote phenotype). */
+
+
+const ABNORMAL = 9;     // chromosome with a deletion
+const MARKER_LOCUS = 11;
+
+register('chapter3', (node) => {
+  const ch = chapterByN(3);
+  chapterShell(node, ch, (body) => {
+    let flagged = null;
+    let taskADone = false;
+
+    // ---- Task A: karyotype ----
+    const kar = document.createElement('div');
+    kar.className = 'panel flourish';
+    kar.innerHTML = `
+      <h3>A · Cariótipo da criança</h3>
+      <p class="muted">Examine os 22 autossomos + par sexual. Sinalize o cromossomo que
+      apresenta uma <b>anomalia estrutural</b> (segmento ausente).</p>
+      <div class="karyotype">${chromos()}</div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn primary" id="check-a" disabled>Confirmar cromossomo anômalo</button>
+      </div>
+      <div id="a-feedback"></div>`;
+    body.appendChild(kar);
+
+    on(kar, 'click', '.chromo', (e, t) => {
+      flagged = +t.dataset.n;
+      kar.querySelectorAll('.chromo').forEach(c => c.classList.remove('flagged'));
+      t.classList.add('flagged');
+      kar.querySelector('#check-a').disabled = false;
+    });
+
+    on(kar, 'click', '#check-a', () => {
+      const fb = kar.querySelector('#a-feedback');
+      if (flagged === ABNORMAL) {
+        fb.innerHTML = feedback(`<strong>Correto!</strong> O cromossomo ${ABNORMAL} mostra uma
+          <b>deleção</b> — um segmento perdido, visível pelo braço encurtado e padrão de bandas
+          alterado. Anomalias estruturais podem servir de marcador familiar.`, 'good');
+        unlockCodex(['cariotipo']);
+        taskADone = true;
+        taskB.classList.remove('hidden');
+        taskB.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        fb.innerHTML = feedback(`<strong>Não é esse.</strong> Procure o cromossomo cujo braço
+          está visivelmente mais curto que seu par homólogo — sinal de deleção.`, 'bad');
+      }
+    });
+
+    // ---- Task B: incomplete dominance marker ----
+    const taskB = document.createElement('div');
+    taskB.className = 'panel flourish hidden';
+    taskB.innerHTML = `
+      <h3>B · O marcador de pigmento (locus ${MARKER_LOCUS})</h3>
+      <div class="row">
+        <div class="grow" style="min-width:280px">
+          <p>Um marcador de pigmento floral herdado segue <b>dominância incompleta</b>:
+          <span class="pill blood">RR = vermelho</span>
+          <span class="pill gold">Rr = rosa</span>
+          <span class="pill">rr = branco</span>.</p>
+          <p>A criança expressa o fenótipo <b>rosa (intermediário)</b>. Entre os candidatos,
+          apenas <b>Helena Drummond</b> também é <b>rosa (Rr)</b>; os demais ramos são vermelhos
+          ou brancos puros.</p>
+          <p><b>Pergunta:</b> qual o genótipo da criança para este marcador?</p>
+          <div class="row" data-group="geno">
+            <div class="card selectable" data-g="RR">RR (vermelho)</div>
+            <div class="card selectable" data-g="Rr">Rr (rosa)</div>
+            <div class="card selectable" data-g="rr">rr (branco)</div>
+          </div>
+          <div class="center" style="margin-top:10px"><button class="btn primary" id="check-b">Confirmar genótipo</button></div>
+          <div id="b-feedback"></div>
+        </div>
+        <div style="flex:0 0 300px">
+          ${note('Dominância Incompleta', `<ul>
+            <li>Heterozigoto = fenótipo <b>intermediário</b></li>
+            <li>Rr → <b>rosa</b>, nem vermelho nem branco</li>
+            <li>Cruzamento Rr × Rr → 1 vermelho : 2 rosa : 1 branco</li>
+          </ul>`, '🌸')}
+        </div>
+      </div>`;
+    body.appendChild(taskB);
+
+    let gPick = null;
+    on(taskB, 'click', '[data-g]', (e, t) => {
+      gPick = t.dataset.g;
+      taskB.querySelectorAll('[data-g]').forEach(c => c.classList.remove('chosen'));
+      t.classList.add('chosen');
+    });
+
+    on(taskB, 'click', '#check-b', () => {
+      const fb = taskB.querySelector('#b-feedback');
+      if (gPick === 'Rr') {
+        // demonstrate the 1:2:1 with a Punnett call for teaching
+        const ph = phenotypes('Rr', 'Rr', { mode: 'incomplete' });
+        const ratio = `${ph['RR'] || 0} vermelho : ${ph['Rr'] || 0} rosa : ${ph['rr'] || 0} branco`;
+        fb.innerHTML = feedback(`<strong>Correto!</strong> Fenótipo rosa só existe em <b>Rr</b>
+          (dominância incompleta). Isso liga a criança ao ramo de Helena Drummond.
+          Para referência, Rr × Rr produz ${ratio}.`, 'good');
+        finish();
+      } else {
+        fb.innerHTML = feedback(`<strong>Reveja.</strong> Na dominância incompleta o fenótipo
+          intermediário (rosa) corresponde ao heterozigoto. RR seria vermelho e rr branco.`, 'bad');
+      }
+    });
+
+    function finish() {
+      if (getState().chapterDone[3]) return;
+      addEvidence({ id: 'ev-chromo', chapter: 3, title: 'Marcador cromossômico',
+        text: `Deleção no cromossomo ${ABNORMAL} e marcador de pigmento rosa (Rr, dominância incompleta) ligam a criança ao ramo Drummond.` });
+      unlockCodex(chapterByN(3).codex);
+      completeChapter(3, { insight: 140, tool: chapterByN(3).toolUnlock });
+      setTimeout(() => { toast('✦ +140 perspicácia · Sequenciador de DNA desbloqueado!', 'good'); afterChapter(node, 3); }, 700);
+    }
+  });
+});
+
+function chromos() {
+  let out = '';
+  for (let i = 1; i <= 22; i++) {
+    const short = i === ABNORMAL;
+    out += chromoSVG(i, short);
+  }
+  out += chromoSVG('XY', false, true);
+  return out;
+}
+
+function chromoSVG(n, short, sex = false) {
+  const h = short ? 34 : 58;            // shortened arm signals the deletion
+  const marker = (n === MARKER_LOCUS) ? '<circle cx="9" cy="20" r="3" fill="#b8893b"/>' : '';
+  return `<div class="chromo" data-n="${n}">
+    <svg width="22" height="64" viewBox="0 0 18 64">
+      <rect x="6" y="${30 - h/2}" width="6" height="${h}" rx="3" fill="#7a2d24" stroke="#2a1d10" stroke-width="1.5"/>
+      <circle cx="9" cy="30" r="3.4" fill="#2a1d10"/>
+      ${marker}
+    </svg>
+    <span class="num">${n}</span>
+  </div>`;
+}
+
+
+/* ===== js/screens/chapter4.js ===== */
+/* chapter4.js — O Mistério da Mutação.
+   Player gathers forensic clues, then classifies the origin of the child's
+   new condition: spontaneous (de novo), germline, somatic, or DNA-repair
+   defect. classify() in mutation.js scores the evidence. */
+
+
+const EXPECTED = 'espontanea';
+
+const CLUES = [
+  { id: 'tecidos', label: 'Comparar sangue e pele da criança',
+    found: 'A alteração está em TODAS as células (sangue e pele) — não restrita a um tecido.',
+    weights: { espontanea: 2, germinativa: 2, somatica: -3 } },
+  { id: 'pais-sangue', label: 'Sequenciar o sangue de ambos os pais',
+    found: 'A mutação está AUSENTE no sangue de Helena e Rafael.',
+    weights: { espontanea: 2, germinativa: 1, somatica: -1 } },
+  { id: 'germinativa', label: 'Triagem das células germinativas dos pais',
+    found: 'Triagem germinativa dos pais: NEGATIVA — nenhum dos pais a carrega.',
+    weights: { espontanea: 3, germinativa: -2 } },
+  { id: 'reparo', label: 'Sequenciar genes de reparo de DNA (via XP)',
+    found: 'Os genes de reparo de DNA estão NORMAIS — sem defeito tipo Xeroderma Pigmentoso.',
+    weights: { reparo: -3, espontanea: 1 } },
+  { id: 'historico', label: 'Revisar histórico familiar e consanguinidade',
+    found: 'SEM histórico familiar e SEM consanguinidade entre os pais.',
+    weights: { reparo: -2, germinativa: -1, espontanea: 1 } },
+];
+
+register('chapter4', (node) => {
+  const ch = chapterByN(4);
+  chapterShell(node, ch, (body) => {
+    const gathered = [];
+
+    const intro = document.createElement('div');
+    intro.className = 'row';
+    intro.innerHTML = `
+      <div class="panel flourish grow" style="min-width:300px">
+        <h3>O sintoma inédito</h3>
+        <p>A criança apresenta <b>${esc(BABY.condicao)}</b> — uma condição ausente em todas as
+        gerações anteriores das famílias. De onde veio?</p>
+        <p class="muted">Reúna evidências no banco de mutações antes de classificar a origem.</p>
+      </div>
+      <div style="flex:0 0 320px">
+        ${note('Tipos de Mutação', `<ul>
+          <li><b>Espontânea (de novo):</b> nova, ausente nos pais</li>
+          <li><b>Germinativa:</b> herdada de gameta de um genitor portador</li>
+          <li><b>Somática:</b> só em um tecido; não hereditária</li>
+          <li><b>Falha de reparo:</b> defeito em genes de reparo do DNA</li>
+        </ul>`, '⚠️')}
+      </div>`;
+    body.appendChild(intro);
+
+    const lab = document.createElement('div');
+    lab.className = 'panel flourish';
+    lab.innerHTML = `<h3>Banco de Mutações — coletar evidências</h3>
+      <div class="row">${CLUES.map(c => `
+        <button class="btn small" data-clue="${c.id}">🔬 ${c.label}</button>`).join('')}</div>
+      <div class="readout" id="findings" style="margin-top:12px">Nenhuma evidência coletada ainda.</div>`;
+    body.appendChild(lab);
+
+    const decide = document.createElement('div');
+    decide.className = 'panel flourish';
+    decide.innerHTML = `<h3>Classifique a origem da mutação</h3>
+      <p class="muted">Colete ao menos 3 evidências antes de concluir.</p>
+      <div class="row" data-group="type">
+        ${Object.entries(MUTATION_TYPES).map(([k, v]) => `
+          <div class="card selectable grow" data-type="${k}"><h4>${v}</h4></div>`).join('')}
+      </div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn primary" id="conclude4" disabled>Concluir classificação</button>
+      </div>
+      <div id="c4-feedback"></div>`;
+    body.appendChild(decide);
+
+    let chosen = null;
+    function refreshFindings() {
+      const fEl = lab.querySelector('#findings');
+      fEl.textContent = gathered.length
+        ? gathered.map(c => '• ' + c.found).join('\n')
+        : 'Nenhuma evidência coletada ainda.';
+      decide.querySelector('#conclude4').disabled = !(chosen && gathered.length >= 3);
+    }
+
+    on(lab, 'click', '[data-clue]', (e, t) => {
+      const clue = CLUES.find(c => c.id === t.dataset.clue);
+      if (!gathered.includes(clue)) { gathered.push(clue); t.disabled = true; t.classList.add('ghost'); }
+      refreshFindings();
+    });
+
+    on(decide, 'click', '[data-type]', (e, t) => {
+      chosen = t.dataset.type;
+      decide.querySelectorAll('[data-type]').forEach(c => c.classList.remove('chosen'));
+      t.classList.add('chosen');
+      refreshFindings();
+    });
+
+    on(decide, 'click', '#conclude4', () => {
+      const fb = decide.querySelector('#c4-feedback');
+      const res = check(gathered, chosen, EXPECTED);
+      if (res.correct) {
+        fb.innerHTML = feedback(`<strong>Correto — mutação espontânea (de novo).</strong>
+          A alteração está em todas as células da criança (logo, não é somática), está ausente
+          no sangue E nas células germinativas dos pais (logo, não foi herdada), e os genes de
+          reparo são normais (não é falha de reparo). Surgiu nova, num gameta, sem causa
+          herdada — uma mutação de novo.`, 'good');
+        finish();
+      } else {
+        const tips = {
+          somatica: 'Mutação somática ficaria restrita a um tecido — mas ela está em todas as células.',
+          germinativa: 'Germinativa herdada exigiria um dos pais portador — a triagem germinativa foi negativa.',
+          reparo: 'Falha de reparo apareceria com genes de reparo defeituosos — eles estão normais.',
+          espontanea: '',
+        };
+        fb.innerHTML = feedback(`<strong>Reveja as evidências.</strong> ${tips[chosen] || ''}
+          A evidência aponta para <em>${MUTATION_TYPES[res.evidenceBest]}</em>.`, 'bad');
+      }
+    });
+  });
+
+  function finish() {
+    if (getState().chapterDone[4]) return;
+    addEvidence({ id: 'ev-mut', chapter: 4, title: 'Origem da mutação',
+      text: 'A condição da criança é uma mutação espontânea (de novo): ausente nos pais e nas células germinativas, reparo de DNA normal.' });
+    unlockCodex(chapterByN(4).codex);
+    completeChapter(4, { insight: 160, tool: chapterByN(4).toolUnlock });
+    setTimeout(() => { toast('✦ +160 perspicácia · Reconstrutor de Árvore desbloqueado!', 'good'); afterChapter(node, 4); }, 700);
+  }
+});
+
+
+/* ===== js/screens/chapter5.js ===== */
+/* chapter5.js — A Linhagem Final.
+   Recap all evidence, solve a probability capstone for the deduced couple,
+   then name the biological parents and reconstruct the family tree. */
+
+
+register('chapter5', (node) => {
+  const ch = chapterByN(5);
+  chapterShell(node, ch, (body) => {
+    const s = getState();
+
+    // ---- Evidence recap ----
+    const recap = document.createElement('div');
+    recap.className = 'panel flourish';
+    recap.innerHTML = `<h3>Dossiê reunido</h3>
+      ${s.evidence.length ? `<div class="stack">${s.evidence.map(e => `
+        <div class="card"><h4>Cap. ${e.chapter} — ${e.title}</h4><p style="margin:0">${e.text}</p></div>`).join('')}</div>`
+      : `<p class="muted">Você ainda não coletou evidências nos capítulos anteriores.</p>`}`;
+    body.appendChild(recap);
+
+    // ---- Probability capstone ----
+    const prob = document.createElement('div');
+    prob.className = 'panel flourish';
+    prob.innerHTML = `
+      <h3>Prova final de probabilidade</h3>
+      <div class="row">
+        <div class="grow" style="min-width:280px">
+          <p>Para o casal compatível — <b>Helena (Iᴮi, Rh Dd)</b> × <b>Rafael (IᴬIᴮ, Rh dd)</b> —
+          calcule a probabilidade de um filho ser exatamente <b>${BABY.blood.abo}${BABY.blood.rh}</b>.</p>
+
+          <p><b>1) P(tipo B):</b></p>
+          <div class="row" data-group="pb">
+            <div class="card selectable" data-pb="1/4">1/4</div>
+            <div class="card selectable" data-pb="1/2">1/2</div>
+            <div class="card selectable" data-pb="3/4">3/4</div>
+          </div>
+
+          <p style="margin-top:10px"><b>2) P(Rh+):</b></p>
+          <div class="row" data-group="prh">
+            <div class="card selectable" data-prh="1/4">1/4</div>
+            <div class="card selectable" data-prh="1/2">1/2</div>
+            <div class="card selectable" data-prh="1/1">1 (certo)</div>
+          </div>
+
+          <p style="margin-top:10px"><b>3) P(B e Rh+) combinada:</b></p>
+          <div class="row" data-group="pcomb">
+            <div class="card selectable" data-pcomb="1/8">1/8</div>
+            <div class="card selectable" data-pcomb="1/4">1/4</div>
+            <div class="card selectable" data-pcomb="1/2">1/2</div>
+          </div>
+
+          <div class="center" style="margin-top:12px"><button class="btn primary" id="check-prob">Verificar cálculo</button></div>
+          <div id="prob-feedback"></div>
+        </div>
+        <div style="flex:0 0 300px">
+          ${note('Regra do "e"', `<ul>
+            <li>Eventos independentes: <b>multiplique</b></li>
+            <li>Iᴮi × IᴬIᴮ → B = Iᴮ·(Iᴬ ou Iᴮ)</li>
+            <li>Dd × dd → metade Rh+</li>
+          </ul>`, '🎲')}
+        </div>
+      </div>`;
+    body.appendChild(prob);
+
+    const pick = { pb: null, prh: null, pcomb: null };
+    ['pb', 'prh', 'pcomb'].forEach(group => {
+      on(prob, 'click', `[data-${group}]`, (e, t) => {
+        pick[group] = t.dataset[group];
+        prob.querySelectorAll(`[data-${group}]`).forEach(c => c.classList.remove('chosen'));
+        t.classList.add('chosen');
+      });
+    });
+
+    let probSolved = false;
+    on(prob, 'click', '#check-prob', () => {
+      const fb = prob.querySelector('#prob-feedback');
+      const pb = parseFrac(pick.pb), prh = parseFrac(pick.prh), pc = parseFrac(pick.pcomb);
+      if (!pb || !prh || !pc) { toast('Responda os três itens.', 'bad'); return; }
+      const okB = equals(pb, fraction(1, 2));
+      const okRh = equals(prh, fraction(1, 2));
+      const expectedComb = combineAnd(fraction(1, 2), fraction(1, 2)); // 1/4
+      const okC = equals(pc, expectedComb);
+      if (okB && okRh && okC) {
+        fb.innerHTML = feedback(`<strong>Cálculo correto!</strong>
+          P(B) = 1/2 (Iᴮi × IᴬIᴮ → AB, B, A, B → 2/4 são B).
+          P(Rh+) = 1/2 (Dd × dd → metade D_).
+          Como são independentes, P(B e Rh+) = 1/2 × 1/2 = <b>${format(expectedComb)}</b>.
+          O resultado B+ é plenamente possível para este casal.`, 'good');
+        probSolved = true;
+        accuse.classList.remove('hidden');
+        accuse.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        const tips = [];
+        if (!okB) tips.push('Liste os 4 descendentes de Iᴮi × IᴬIᴮ e conte quantos são B.');
+        if (!okRh) tips.push('Dd × dd: metade recebe D (Rh+), metade dd (Rh−).');
+        if (!okC) tips.push('Para "B e Rh+", multiplique as duas probabilidades.');
+        fb.innerHTML = feedback(`<strong>Reveja.</strong> ${tips.join(' ')}`, 'bad');
+      }
+    });
+
+    // ---- Accusation ----
+    const accuse = document.createElement('div');
+    accuse.className = 'panel flourish hidden';
+    accuse.innerHTML = `<h3>Nomeie os pais biológicos</h3>
+      <p class="muted">Com todas as provas convergindo, aponte a família da criança.</p>
+      <div class="row" data-group="fam">
+        ${FAMILIES.map(f => `<div class="card selectable grow" data-fam="${f.id}">
+          <h4 style="color:${f.cor}">${f.nome}</h4>
+          <p style="margin:0">${esc(f.membros[0].nome)} & ${esc(f.membros[1].nome)}</p>
+        </div>`).join('')}
+      </div>
+      <div class="center" style="margin-top:12px"><button class="btn primary" id="accuse-btn" disabled>Acusar esta linhagem</button></div>
+      <div id="accuse-feedback"></div>`;
+    body.appendChild(accuse);
+
+    let famPick = null;
+    on(accuse, 'click', '[data-fam]', (e, t) => {
+      famPick = t.dataset.fam;
+      accuse.querySelectorAll('[data-fam]').forEach(c => c.classList.remove('chosen'));
+      t.classList.add('chosen');
+      accuse.querySelector('#accuse-btn').disabled = false;
+    });
+
+    on(accuse, 'click', '#accuse-btn', () => {
+      const fb = accuse.querySelector('#accuse-feedback');
+      if (famPick === TRUTH.familia) {
+        fb.innerHTML = feedback(`<strong>Linhagem confirmada!</strong> Todas as evidências —
+          heredograma, exclusão por sangue, marcador cromossômico, mutação de novo e o cálculo
+          de probabilidade — convergem para a <b>${FAMILIES.find(f=>f.id===TRUTH.familia).nome}</b>.`, 'good');
+        unlockCodex(chapterByN(5).codex);
+        if (!getState().chapterDone[5]) {
+          completeChapter(5, { insight: 200 });
+          getState().lineageSolved = true; save();
+        }
+        setTimeout(() => go('ending'), 1100);
+      } else {
+        fb.innerHTML = feedback(`<strong>As provas não sustentam essa acusação.</strong>
+          Revise a exclusão por sangue (Cap. 2) e o marcador cromossômico (Cap. 3) — eles
+          eliminam essa família.`, 'bad');
+      }
+    });
+  });
+});
+
+function parseFrac(str) {
+  if (!str) return null;
+  const [n, d] = str.split('/').map(Number);
+  return fraction(n, d);
+}
+
+
+/* ===== js/screens/ending.js ===== */
+/* ending.js — the lineage reveal + reconstructed family tree. */
+
+
+register('ending', (node) => {
+  gamebar(node);
+  const s = getState();
+  const fam = familyById(TRUTH.familia);
+  const mae = fam.membros.find(m => m.nome === TRUTH.mae);
+  const pai = fam.membros.find(m => m.nome === TRUTH.pai);
+
+  const personHTML = (svg, name, sub) => `
+    <div class="person">
+      <div class="portrait">${vineFrame(svg, { color: fam.cor })}</div>
+      <span class="ribbon">${name}</span>
+      ${sub ? `<span class="pill">${sub}</span>` : ''}
+    </div>`;
+
+  const reveal = document.createElement('div');
+  reveal.className = 'panel flourish';
+  reveal.style.marginTop = '14px';
+  reveal.style.textAlign = 'center';
+  reveal.innerHTML = `
+    <h1>A Linhagem Revelada</h1>
+    <p class="subtitle" style="font-family:var(--font-note);font-size:1.5rem;color:var(--ink-soft)">
+      A criança pertence à ${fam.nome}</p>
+
+    <div class="row" style="justify-content:center;align-items:flex-end;gap:40px;margin:18px 0">
+      ${personHTML(avatar(mae.traits), mae.nome, `${mae.blood.abo}${mae.blood.rh}`)}
+      <div style="font-size:2rem;align-self:center;color:var(--oxblood)">♥</div>
+      ${personHTML(avatar(pai.traits), pai.nome, `${pai.blood.abo}${pai.blood.rh}`)}
+    </div>
+    <div style="font-size:1.6rem;color:var(--wood-dark)">⤵</div>
+    <div class="row" style="justify-content:center;margin-top:8px">
+      ${personHTML(baby(BABY.traits), `${BABY.apelido} (${BABY.blood.abo}${BABY.blood.rh})`, 'a criança')}
+    </div>
+
+    <div class="feedback good" style="text-align:left;max-width:720px;margin:18px auto 0">
+      ${TRUTH.resumo}
+    </div>
+    <p class="muted" style="margin-top:10px">A criança herdou de Helena os traços de pigmentação
+    (pele, cabelos e olhos) — confirmados pelo marcador de dominância incompleta.</p>
+
+    <div class="row" style="justify-content:center;margin-top:16px">
+      <span class="pill gold" style="font-size:1.1rem">✦ Perspicácia final: ${s.insight}</span>
+    </div>
+  `;
+  node.appendChild(reveal);
+
+  const recap = document.createElement('div');
+  recap.className = 'panel flourish';
+  recap.style.marginTop = '16px';
+  recap.innerHTML = `<h2>Conceitos dominados nesta investigação</h2>
+    <div class="map-grid">${CHAPTERS.map(c => `
+      <div class="card"><h4>Cap. ${c.n} — ${c.titulo}</h4>
+        <p style="margin:0;font-size:0.95rem">${c.objetivo}</p></div>`).join('')}</div>
+    <div class="center" style="margin-top:18px">
+      <button class="btn" data-act="map">🗺️ Voltar ao mapa</button>
+      <button class="btn primary" data-act="restart">📖 Nova investigação</button>
+    </div>`;
+  node.appendChild(recap);
+
+  on(node, 'click', '[data-act]', (e, t) => {
+    if (t.dataset.act === 'map') go('map');
+    if (t.dataset.act === 'restart') { reset(); go('title'); }
+  });
+});
+
+
+/* ===== js/main.js ===== */
+/* main.js — bootstrap. Registers all screens, loads save, renders. */
+
+
+// Register screens (import for side-effects)
+
+// Optional genetics self-test via ?selftest
+
+// Boot
+load();
+go('title');
+
+  </script>
+</body>
+</html>
