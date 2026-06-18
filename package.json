@@ -1,0 +1,11 @@
+{
+  "name": "herdeiro-genetico",
+  "version": "1.0.0",
+  "description": "Herdeiro Genético: A Linhagem Perdida — jogo educativo de genética (vanilla HTML/CSS/JS).",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node js/genetics/run-selftest.js"
+  }
+}

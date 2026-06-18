@@ -1,0 +1,278 @@
+/* ============================================================
+   components.css — reusable UI: buttons, panels, dialogue,
+   cards, modals, sticky cheat-sheet notes, ribbon banners,
+   vine frames, crib slots, badges, progress bars
+   ============================================================ */
+
+/* ---------- Parchment panel ---------- */
+.panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255,250,235,0.55), rgba(210,185,140,0.25)),
+    var(--cream);
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px var(--shadow), inset 0 0 30px rgba(150,110,60,0.18);
+  padding: 22px 24px;
+}
+.panel.tight { padding: 14px 16px; }
+
+/* Decorative corner-flourish for important panels */
+.panel.flourish::before,
+.panel.flourish::after {
+  content: "❧";
+  position: absolute;
+  font-size: 1.2rem;
+  color: var(--gold);
+  opacity: 0.7;
+}
+.panel.flourish::before { top: 8px; left: 12px; }
+.panel.flourish::after  { bottom: 4px; right: 12px; transform: scaleX(-1); }
+
+/* ---------- Buttons (carved wood / parchment) ---------- */
+.btn {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+  background: linear-gradient(180deg, var(--wood) 0%, var(--wood-dark) 100%);
+  border: 2px solid var(--wood-dark);
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  box-shadow: 0 3px 0 var(--wood-dark), 0 5px 10px var(--shadow);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--wood-dark), 0 2px 6px var(--shadow); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.4); }
+
+.btn.primary {
+  background: linear-gradient(180deg, var(--oxblood-light) 0%, var(--oxblood) 100%);
+  border-color: #5a201a;
+  box-shadow: 0 3px 0 #5a201a, 0 5px 10px var(--shadow);
+}
+.btn.primary:active { box-shadow: 0 0 0 #5a201a, 0 2px 6px var(--shadow); }
+
+.btn.success {
+  background: linear-gradient(180deg, var(--forest-light) 0%, var(--forest) 100%);
+  border-color: #2c4228;
+  box-shadow: 0 3px 0 #2c4228, 0 5px 10px var(--shadow);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 2px dashed var(--wood);
+  box-shadow: none;
+}
+.btn.small { padding: 6px 12px; font-size: 0.85rem; }
+.btn.block { display: block; width: 100%; }
+
+/* Circular emblem icon button (bottom-bar style from reference) */
+.emblem {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: inline-grid; place-items: center;
+  font-size: 1.4rem;
+  color: var(--cream);
+  background: radial-gradient(circle at 35% 30%, var(--wood) 0%, var(--wood-dark) 100%);
+  border: 3px solid var(--gold);
+  box-shadow: 0 3px 8px var(--shadow);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.emblem:hover { transform: translateY(-2px) scale(1.05); }
+.emblem.locked { filter: grayscale(1) brightness(0.7); cursor: not-allowed; border-color: #7a6a4a; }
+
+/* ---------- Ribbon name banner (under portraits) ---------- */
+.ribbon {
+  display: inline-block;
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  padding: 3px 14px;
+  border: 1.5px solid var(--wood);
+  border-radius: 3px;
+  box-shadow: 0 2px 4px var(--shadow);
+  white-space: nowrap;
+}
+.ribbon::before, .ribbon::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 8px;
+  background: var(--wood);
+}
+.ribbon::before { left: -8px; clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+.ribbon::after  { right: -8px; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+
+/* ---------- Vine-framed portrait wrapper ---------- */
+.portrait {
+  position: relative;
+  width: 96px; height: 96px;
+  display: grid; place-items: center;
+}
+.portrait svg { width: 100%; height: 100%; display: block; }
+.portrait.selectable { cursor: pointer; transition: transform 0.12s ease; }
+.portrait.selectable:hover { transform: translateY(-3px) scale(1.04); }
+.portrait.chosen { filter: drop-shadow(0 0 6px var(--gold-light)); }
+.portrait .badge {
+  position: absolute; top: -6px; right: -6px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--oxblood); color: var(--cream);
+  display: grid; place-items: center;
+  font-size: 0.8rem; font-weight: 700;
+  border: 2px solid var(--cream);
+}
+
+.person {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Sticky cheat-sheet note (genetics rules) ---------- */
+.note {
+  position: relative;
+  font-family: var(--font-note);
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: #2c2418;
+  background: #fff7d6;
+  background-image:
+    repeating-linear-gradient(transparent 0 31px, rgba(120,100,60,0.18) 31px 32px);
+  padding: 18px 20px 16px;
+  border: 1px solid #e6d59a;
+  box-shadow: 3px 5px 12px var(--shadow);
+  transform: rotate(-1.2deg);
+  max-width: 340px;
+}
+.note::before { /* tape */
+  content: "";
+  position: absolute; top: -12px; left: 50%;
+  width: 80px; height: 24px; transform: translateX(-50%) rotate(2deg);
+  background: rgba(200,180,120,0.55);
+  border: 1px solid rgba(150,130,80,0.4);
+}
+.note h4 {
+  font-family: var(--font-note);
+  font-size: 1.55rem; margin: 0 0 6px; color: var(--oxblood);
+}
+.note ul { margin: 0; padding-left: 1.1em; }
+.note .tag {
+  position: absolute; top: 6px; right: 10px;
+  font-size: 1.1rem; color: var(--forest);
+  transform: rotate(6deg);
+}
+
+/* ---------- Dialogue box ---------- */
+.dialogue {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: linear-gradient(180deg, rgba(255,250,235,0.7), rgba(210,185,140,0.3));
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.dialogue .speaker { font-family: var(--font-display); color: var(--oxblood); font-size: 0.95rem; }
+.dialogue .line { margin: 2px 0 0; font-size: 1.05rem; }
+
+/* ---------- Cards (evidence / options / codex) ---------- */
+.card {
+  background: var(--cream);
+  border: 2px solid var(--wood);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 3px 8px var(--shadow);
+}
+.card.selectable { cursor: pointer; transition: transform 0.1s ease, border-color 0.1s ease; }
+.card.selectable:hover { transform: translateY(-2px); border-color: var(--gold); }
+.card.chosen { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(95,129,85,0.4), 0 3px 8px var(--shadow); }
+.card.wrong  { border-color: var(--oxblood); animation: shake 0.35s; }
+.card h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 1rem; color: var(--ink-soft); }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* ---------- Crib slot (baby selection, from reference 2) ---------- */
+.crib {
+  width: 120px;
+  padding: 10px 8px;
+  background: repeating-linear-gradient(90deg, #c9a06a 0 8px, #b88a52 8px 16px);
+  border: 3px solid var(--wood-dark);
+  border-radius: 14px 14px 18px 18px;
+  box-shadow: inset 0 6px 14px rgba(60,30,10,0.3), 0 3px 8px var(--shadow);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.crib:hover { transform: translateY(-3px); }
+.crib.chosen { box-shadow: inset 0 6px 14px rgba(60,30,10,0.3), 0 0 0 4px var(--gold-light), 0 3px 8px var(--shadow); }
+
+/* ---------- Progress / stat bars ---------- */
+.bar {
+  height: 12px; background: rgba(60,40,20,0.35);
+  border-radius: 6px; overflow: hidden; border: 1px solid var(--wood-dark);
+}
+.bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.bar.health > span { background: linear-gradient(90deg, #3f6f9e, #6fa3cf); }
+.bar.skill  > span { background: linear-gradient(90deg, var(--forest), var(--forest-light)); }
+
+/* ---------- Pills / badges ---------- */
+.pill {
+  display: inline-block;
+  font-size: 0.8rem; font-family: var(--font-display);
+  padding: 2px 10px; border-radius: 999px;
+  background: var(--parchment-deep); color: var(--ink);
+  border: 1px solid var(--wood);
+}
+.pill.gold { background: var(--gold-light); }
+.pill.blood { background: var(--oxblood); color: var(--cream); border-color: #5a201a; }
+.pill.leaf { background: var(--forest-light); color: var(--cream); border-color: #2c4228; }
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(30,18,6,0.6);
+  display: grid; place-items: center;
+  padding: 20px;
+  animation: fadeUp 0.2s ease;
+}
+.modal {
+  max-width: 560px; width: 100%;
+  max-height: 86vh; overflow-y: auto;
+}
+
+/* ---------- Toast ---------- */
+#toast-layer {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  pointer-events: none;
+}
+.toast {
+  font-family: var(--font-display);
+  background: var(--ink); color: var(--cream);
+  padding: 10px 18px; border-radius: 999px;
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 12px var(--shadow);
+  animation: fadeUp 0.25s ease;
+}
+.toast.good { background: var(--forest); border-color: var(--forest-light); }
+.toast.bad  { background: var(--oxblood); border-color: var(--oxblood-light); }
+
+/* ---------- Feedback box (scientific explanation) ---------- */
+.feedback {
+  border-left: 6px solid var(--gold);
+  background: rgba(255,250,235,0.6);
+  padding: 12px 16px; border-radius: 6px; margin-top: 12px;
+}
+.feedback.good { border-left-color: var(--forest); }
+.feedback.bad  { border-left-color: var(--oxblood); }
