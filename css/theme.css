@@ -1,0 +1,135 @@
+/* ============================================================
+   theme.css — palette, parchment textures, fonts, base layout
+   Herdeiro Genético: A Linhagem Perdida
+   ============================================================ */
+
+:root {
+  /* Earthy storybook palette */
+  --parchment:      #e9d8b4;
+  --parchment-2:    #ddc79a;
+  --parchment-deep: #c9ad7a;
+  --ink:            #3a2a1a;
+  --ink-soft:       #5b4630;
+  --oxblood:        #7a2d24;
+  --oxblood-light:  #a8453a;
+  --forest:         #3f5d3a;
+  --forest-light:   #5e8155;
+  --gold:           #b8893b;
+  --gold-light:     #e0b35e;
+  --wood:           #8a5a32;
+  --wood-dark:      #5e3a1e;
+  --cream:          #f3e8cf;
+  --shadow:         rgba(40, 26, 12, 0.45);
+
+  /* Fonts */
+  --font-display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-body:    'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-note:    'Caveat', 'Comic Sans MS', cursive;
+
+  --radius: 10px;
+  --maxw: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: #2a1d10;
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Layered parchment background */
+.bg-parchment {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,245,220,0.55), transparent 55%),
+    radial-gradient(circle at 75% 80%, rgba(160,120,70,0.30), transparent 55%),
+    linear-gradient(135deg, var(--parchment) 0%, var(--parchment-2) 45%, var(--parchment-deep) 100%);
+}
+
+/* Subtle paper grain via SVG noise data-uri */
+.bg-parchment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.10;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Soft dark vignette so it reads "cozy dark fantasy" */
+.bg-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: inset 0 0 220px 60px rgba(40, 24, 8, 0.55);
+}
+
+#app {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--oxblood);
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5em;
+  line-height: 1.15;
+  text-shadow: 0 1px 0 rgba(255,245,220,0.4);
+}
+h1 { font-size: 2.4rem; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.25rem; color: var(--ink-soft); }
+
+p { margin: 0 0 0.8em; }
+
+a { color: var(--oxblood); }
+
+::selection { background: var(--gold-light); color: var(--ink); }
+
+/* Scrollbar flavor */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--parchment-deep); }
+::-webkit-scrollbar-thumb {
+  background: var(--wood);
+  border-radius: 8px;
+  border: 2px solid var(--parchment-deep);
+}
+
+/* Utility */
+.center { text-align: center; }
+.muted  { color: var(--ink-soft); }
+.hidden { display: none !important; }
+.stack  { display: flex; flex-direction: column; gap: 16px; }
+.row    { display: flex; gap: 16px; flex-wrap: wrap; }
+.grow   { flex: 1; }
+
+/* Fade-in for screen transitions */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.screen { animation: fadeUp 0.35s ease both; }
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  h1 { font-size: 1.9rem; }
+}
