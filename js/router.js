@@ -11,6 +11,8 @@ export function go(id, params = {}) {
   const render = screens.get(id);
   if (!render) { app.innerHTML = `<div class="panel">Tela desconhecida: ${id}</div>`; return; }
   current = { id, params };
+  // dismiss any open modal (lives on <body>, not inside #app) before switching screens
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.remove());
   app.innerHTML = '';
   const wrap = document.createElement('div');
   wrap.className = 'screen';
