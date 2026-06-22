@@ -24,7 +24,7 @@ export const CODEX = [
   { id: 'rh', titulo: 'Fator Rh', chapter: 2,
     texto: 'O fator Rh segue dominância simples: Rh+ (D) domina Rh− (d). Rh+ pode ser DD ou Dd; Rh− é sempre dd. Dois pais Rh− só geram filhos Rh−.' },
   { id: 'dominancia-incompleta', titulo: 'Dominância Incompleta', chapter: 3,
-    texto: 'No heterozigoto surge um fenótipo intermediário entre os dois homozigotos (ex.: flor vermelha × branca → rosa). Diferente da codominância, há mistura/atenuação, não expressão simultânea.' },
+    texto: 'No heterozigoto surge um fenótipo intermediário entre os dois homozigotos. Em humanos, a textura do cabelo é um exemplo: crespo (CC) × liso (cc) → ondulado (Cc). Diferente da codominância, há mistura/atenuação, não expressão simultânea dos dois fenótipos.' },
   { id: 'cariotipo', titulo: 'Cariótipo e Mapeamento', chapter: 3,
     texto: 'O cariótipo organiza os cromossomos por tamanho e padrão de bandas. Permite detectar aneuploidias (ex.: trissomia do 21) e alterações estruturais (deleções, duplicações). O mapeamento cromossômico localiza genes e marcadores em pontos específicos.' },
   { id: 'ligacao-genica', titulo: 'Ligação Gênica', chapter: 3,

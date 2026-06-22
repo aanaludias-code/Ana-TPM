@@ -1195,7 +1195,7 @@ const CODEX = [
   { id: 'rh', titulo: 'Fator Rh', chapter: 2,
     texto: 'O fator Rh segue dominância simples: Rh+ (D) domina Rh− (d). Rh+ pode ser DD ou Dd; Rh− é sempre dd. Dois pais Rh− só geram filhos Rh−.' },
   { id: 'dominancia-incompleta', titulo: 'Dominância Incompleta', chapter: 3,
-    texto: 'No heterozigoto surge um fenótipo intermediário entre os dois homozigotos (ex.: flor vermelha × branca → rosa). Diferente da codominância, há mistura/atenuação, não expressão simultânea.' },
+    texto: 'No heterozigoto surge um fenótipo intermediário entre os dois homozigotos. Em humanos, a textura do cabelo é um exemplo: crespo (CC) × liso (cc) → ondulado (Cc). Diferente da codominância, há mistura/atenuação, não expressão simultânea dos dois fenótipos.' },
   { id: 'cariotipo', titulo: 'Cariótipo e Mapeamento', chapter: 3,
     texto: 'O cariótipo organiza os cromossomos por tamanho e padrão de bandas. Permite detectar aneuploidias (ex.: trissomia do 21) e alterações estruturais (deleções, duplicações). O mapeamento cromossômico localiza genes e marcadores em pontos específicos.' },
   { id: 'ligacao-genica', titulo: 'Ligação Gênica', chapter: 3,
@@ -1453,6 +1453,8 @@ function go(id, params = {}) {
   const render = screens.get(id);
   if (!render) { app.innerHTML = `<div class="panel">Tela desconhecida: ${id}</div>`; return; }
   current = { id, params };
+  // dismiss any open modal (lives on <body>, not inside #app) before switching screens
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.remove());
   app.innerHTML = '';
   const wrap = document.createElement('div');
   wrap.className = 'screen';
@@ -2151,21 +2153,21 @@ register('chapter3', (node) => {
     const taskB = document.createElement('div');
     taskB.className = 'panel flourish hidden';
     taskB.innerHTML = `
-      <h3>B · O marcador de pigmento (locus ${MARKER_LOCUS})</h3>
+      <h3>B · O marcador de textura do cabelo (locus ${MARKER_LOCUS})</h3>
       <div class="row">
         <div class="grow" style="min-width:280px">
-          <p>Um marcador de pigmento floral herdado segue <b>dominância incompleta</b>:
-          <span class="pill blood">RR = vermelho</span>
-          <span class="pill gold">Rr = rosa</span>
-          <span class="pill">rr = branco</span>.</p>
-          <p>A criança expressa o fenótipo <b>rosa (intermediário)</b>. Entre os candidatos,
-          apenas <b>Helena Drummond</b> também é <b>rosa (Rr)</b>; os demais ramos são vermelhos
-          ou brancos puros.</p>
+          <p>Em humanos, a <b>textura do cabelo</b> segue <b>dominância incompleta</b>:
+          <span class="pill blood">CC = crespo</span>
+          <span class="pill gold">Cc = ondulado</span>
+          <span class="pill">cc = liso</span>.</p>
+          <p>A criança tem cabelo <b>ondulado (intermediário)</b>. Entre os candidatos,
+          apenas <b>Helena Drummond</b> também é <b>ondulada (Cc)</b>; os demais ramos têm
+          cabelo crespo ou liso puro.</p>
           <p><b>Pergunta:</b> qual o genótipo da criança para este marcador?</p>
           <div class="row" data-group="geno">
-            <div class="card selectable" data-g="RR">RR (vermelho)</div>
-            <div class="card selectable" data-g="Rr">Rr (rosa)</div>
-            <div class="card selectable" data-g="rr">rr (branco)</div>
+            <div class="card selectable" data-g="CC">CC (crespo)</div>
+            <div class="card selectable" data-g="Cc">Cc (ondulado)</div>
+            <div class="card selectable" data-g="cc">cc (liso)</div>
           </div>
           <div class="center" style="margin-top:10px"><button class="btn primary" id="check-b">Confirmar genótipo</button></div>
           <div id="b-feedback"></div>
@@ -2173,9 +2175,9 @@ register('chapter3', (node) => {
         <div style="flex:0 0 300px">
           ${note('Dominância Incompleta', `<ul>
             <li>Heterozigoto = fenótipo <b>intermediário</b></li>
-            <li>Rr → <b>rosa</b>, nem vermelho nem branco</li>
-            <li>Cruzamento Rr × Rr → 1 vermelho : 2 rosa : 1 branco</li>
-          </ul>`, '🌸')}
+            <li>Cc → <b>ondulado</b>, nem crespo nem liso</li>
+            <li>Cruzamento Cc × Cc → 1 crespo : 2 ondulado : 1 liso</li>
+          </ul>`, '💇')}
         </div>
       </div>`;
     body.appendChild(taskB);
@@ -2189,24 +2191,24 @@ register('chapter3', (node) => {
 
     on(taskB, 'click', '#check-b', () => {
       const fb = taskB.querySelector('#b-feedback');
-      if (gPick === 'Rr') {
+      if (gPick === 'Cc') {
         // demonstrate the 1:2:1 with a Punnett call for teaching
-        const ph = phenotypes('Rr', 'Rr', { mode: 'incomplete' });
-        const ratio = `${ph['RR'] || 0} vermelho : ${ph['Rr'] || 0} rosa : ${ph['rr'] || 0} branco`;
-        fb.innerHTML = feedback(`<strong>Correto!</strong> Fenótipo rosa só existe em <b>Rr</b>
+        const ph = phenotypes('Cc', 'Cc', { mode: 'incomplete' });
+        const ratio = `${ph['CC'] || 0} crespo : ${ph['Cc'] || 0} ondulado : ${ph['cc'] || 0} liso`;
+        fb.innerHTML = feedback(`<strong>Correto!</strong> Cabelo ondulado só existe em <b>Cc</b>
           (dominância incompleta). Isso liga a criança ao ramo de Helena Drummond.
-          Para referência, Rr × Rr produz ${ratio}.`, 'good');
+          Para referência, Cc × Cc produz ${ratio}.`, 'good');
         finish();
       } else {
         fb.innerHTML = feedback(`<strong>Reveja.</strong> Na dominância incompleta o fenótipo
-          intermediário (rosa) corresponde ao heterozigoto. RR seria vermelho e rr branco.`, 'bad');
+          intermediário (ondulado) corresponde ao heterozigoto. CC seria crespo e cc liso.`, 'bad');
       }
     });
 
     function finish() {
       if (getState().chapterDone[3]) return;
       addEvidence({ id: 'ev-chromo', chapter: 3, title: 'Marcador cromossômico',
-        text: `Deleção no cromossomo ${ABNORMAL} e marcador de pigmento rosa (Rr, dominância incompleta) ligam a criança ao ramo Drummond.` });
+        text: `Deleção no cromossomo ${ABNORMAL} e cabelo ondulado (Cc, dominância incompleta) ligam a criança ao ramo Drummond.` });
       unlockCodex(chapterByN(3).codex);
       completeChapter(3, { insight: 140, tool: chapterByN(3).toolUnlock });
       setTimeout(() => { toast('✦ +140 perspicácia · Sequenciador de DNA desbloqueado!', 'good'); afterChapter(node, 3); }, 700);
