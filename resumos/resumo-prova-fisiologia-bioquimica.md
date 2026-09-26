@@ -1,6 +1,6 @@
 # Resumo para a prova — Fisiologia / Bioquímica
 
-Baseado nas 5 aulas: **(1) Introdução à Fisiologia e Homeostase**, **(2) Potencial de Membrana**, **(3) Sistema Nervoso**, **(4) Sinapses e Neurotransmissores**, **(5) Introdução aos Hormônios**.
+Baseado nas 7 aulas: **(1) Introdução à Fisiologia e Homeostase**, **(2) Potencial de Membrana**, **(3) Sistema Nervoso**, **(4) Sinapses e Neurotransmissores**, **(5) Introdução aos Hormônios**, **(6) Sistema Somatossensorial**, **(7) Músculo Esquelético**.
 
 ---
 
@@ -238,6 +238,163 @@ Derivados de aminoácidos: catecolaminas (adrenalina, noradrenalina — comporta
 
 ---
 
+## 6. Sistema Somatossensorial (Sistemas Sensoriais)
+
+### Conceitos
+- **Sistema sensorial:** conjunto de estruturas que **capta e interpreta estímulos** (físicos ou químicos) do meio externo ou interno. Gera: **sensação, percepção, comportamentos e controle visceral**.
+- **Estímulo:** forma de **energia** que pode ser captada por um sistema sensorial. Formas diferentes de energia exigem sistemas sensoriais diferentes.
+- **Sensação:** reconhecer que um estímulo existe e suas propriedades básicas. É a **porta de entrada** da percepção.
+- **Percepção:** dar **significado** e integração às sensações.
+- **Controle visceral:** regulação pelo SN autônomo (FC, respiração, PA, digestão) para manter a homeostase. O centro de controle é o **hipotálamo**.
+
+### Três elementos de todo sistema sensorial
+1. **Receptores:** captam a energia do estímulo e a convertem em sinal biológico.
+2. **Vias sensoriais (aferentes):** conduzem o sinal.
+3. **Áreas sensoriais centrais:** interpretam o sinal e geram a sensação.
+
+### Receptores sensoriais
+Célula ou parte da célula com proteínas de membrana sensíveis à energia do estímulo. Podem ser:
+1. **Células epiteliais modificadas** que fazem sinapse com um neurônio aferente. Ex.: **células de Merkel** (tato e pressão), que liberam neurotransmissor (glutamato, serotonina, ATP…) e excitam o terminal nervoso; outros exemplos são as células ciliadas e as células gustativas.
+2. **Terminações nervosas:**
+   - **livres (nuas)**: receptor neural simples, geralmente axônio amielínico (dor, temperatura);
+   - **encapsuladas**: receptor neural complexo, com cápsula de tecido conjuntivo (tato, pressão, vibração).
+
+### Transdução sensorial
+- **Transdução** = transformar a energia do estímulo em **sinal elétrico**.
+- Tipos de energia: **mecânica, térmica, química, elétrica, eletromagnética e magnética**.
+- **Estímulo adequado:** aquele que o receptor detecta melhor (ex.: luz para o olho). Estímulos muito intensos de outro tipo também podem ativar o receptor (ex.: pancada no olho faz “ver estrelas”).
+- O estímulo gera um **potencial receptor**: potencial **graduado**, geralmente **despolarizante** e localizado. Ele precisa virar **potencial de ação** para seguir até o SNC.
+  - **Neurônio sensorial primário:** potencial receptor → potencial de ação → SNC.
+  - **Célula epitelial receptora:** potencial receptor → libera transmissor → potencial pós-sináptico no neurônio primário → potencial de ação → SNC.
+
+### Campo receptivo
+- Área em que um estímulo ativa um determinado receptor ou neurônio.
+- Campos **pequenos** = alta densidade de inervação = **maior sensibilidade** e precisão (ex.: ponta dos dedos, lábios). Campos grandes = menor precisão (ex.: costas).
+
+### Codificação sensorial
+- As vias só conduzem **potenciais de ação**. Por isso os atributos do estímulo (**tipo/modalidade, intensidade, duração e localização**) são codificados usando:
+  - **receptores específicos** para cada modalidade;
+  - **vias específicas** (linhas rotuladas);
+  - **áreas corticais específicas** para analisar cada informação.
+- **Intensidade:** codificada pela **frequência** de potenciais de ação e pelo **número de receptores** ativados.
+
+### Classificação dos receptores
+**Pela localização do estímulo:**
+1. **Exteroceptores:** meio externo.
+2. **Interoceptores (visceroceptores):** meio interno e vísceras.
+3. **Proprioceptores:** músculos, tendões e articulações (posição do corpo).
+
+**Pelo tipo de energia:**
+| Energia | Receptor | Modalidades (exemplos) |
+|---|---|---|
+| Mecânica | **Mecanorreceptores** | tato, pressão, vibração, posição, audição, equilíbrio, distensão visceral, pressão arterial, dor rápida |
+| Química | **Quimiorreceptores** | paladar (doce, salgado, azedo, amargo), olfato, osmolaridade, O₂/CO₂, glicose, dor lenta |
+| Térmica | **Termorreceptores** | frio e calor |
+| Eletromagnética | **Fotorreceptores** | visão (intensidade, forma, movimento, cor) |
+| Lesão tecidual | **Nociceptores** | dor |
+
+**Paladar (célula gustativa):** salgado (Na⁺ entra por canal) e azedo (H⁺) despolarizam direto. Doce e amargo usam receptores acoplados à proteína G (**gustducina**; vias do AMPc e do IP₃). Todos terminam com entrada ou liberação de **Ca²⁺** → exocitose do transmissor → potencial de ação no neurônio sensitivo.
+
+### Vias sensoriais
+- A informação sensorial de todo o corpo (**exceto a cabeça**) entra no SNC pelas **raízes dorsais** da medula espinal. O corpo do neurônio primário fica no **gânglio da raiz dorsal**.
+- **Organização hierárquica:** receptor → neurônio aferente **primário** → **secundário** → **terciário** → neurônio cortical.
+- **Roteiro:** **medula espinal → bulbo (tronco encefálico) → tálamo → córtex sensorial**. O tálamo é a “estação de passagem” de quase todas as vias, **exceto o olfato**.
+- **Duas grandes vias somatossensoriais:**
+  - **Coluna dorsal – lemnisco medial:** só sensações **mecanorreceptivas finas**: tato fino, vibração, **propriocepção** (posição articular).
+  - **Ântero-lateral (espinotalâmica):** conduz um **amplo espectro** de modalidades: **dor, calor, frio e tato grosseiro**. Tem colaterais para a formação reticular.
+
+### Córtex sensorial
+- Área do córtex onde as informações sensoriais são interpretadas. O córtex somatossensorial primário fica no **giro pós-central** (lobo parietal).
+  - **Área primária:** recebe primeiro a informação → **sensação**.
+  - **Área secundária:** interpreta aspectos seletivos → **percepção**.
+  - **Áreas de associação:** integram informações de vários sistemas sensoriais → percepção coerente.
+- Outras áreas: córtex visual (occipital), auditivo (temporal), gustativo, olfatório.
+
+### Homúnculo de Penfield
+- **Wilder Penfield**, neurocirurgião, estimulou eletricamente o córtex de pacientes com epilepsia (anos 1940–50). Descobriu que a região **pré-central** (motora) e a **pós-central** (sensorial) têm um **mapa do corpo**.
+- **Homúnculo:** quanto **maior o uso ou a sensibilidade** de uma parte do corpo, **maior sua representação** no córtex. Por isso **mãos, lábios, língua e face** são enormes e o tronco é pequeno.
+
+---
+
+## 7. Músculo Esquelético
+
+### Tipos de músculo
+| | Esquelético | Cardíaco | Liso |
+|---|---|---|---|
+| Local | Presos aos ossos | Só no coração | Órgãos ocos, vasos, estômago |
+| Estriado? | **Sim** | **Sim** (discos intercalares) | Não |
+| Controle | **Voluntário** | Involuntário | Involuntário |
+
+### Nomenclatura
+Célula muscular = **fibra muscular** · membrana = **sarcolema** · citoplasma = **sarcoplasma** · retículo endoplasmático = **retículo sarcoplasmático** (armazena **Ca²⁺**).
+
+### Organização (do maior para o menor)
+**Músculo → fascículos (feixes de fibras) → fibra muscular (célula, com vários núcleos) → miofibrilas → sarcômeros → filamentos (actina e miosina)**.
+- O músculo também tem tecido conjuntivo, vasos e nervos, e se liga ao osso pelo **tendão**.
+- A fibra muscular contém: sarcolema, **túbulos T**, sarcoplasma, **vários núcleos**, retículo sarcoplasmático, miofibrilas, **mitocôndrias** e **grânulos de glicogênio**.
+- **Túbulos T:** invaginações do sarcolema que **levam o potencial de ação para dentro da fibra**.
+- **Tríade:** 1 túbulo T + 2 cisternas terminais do retículo sarcoplasmático.
+
+### Sarcômero (unidade contrátil)
+- Vai de um **disco (linha) Z** a outro.
+- **Filamento fino = actina**, junto com **tropomiosina** (cobre os sítios de ligação da actina) e **troponina** (TnC liga Ca²⁺, TnI inibe, TnT liga à tropomiosina).
+- **Filamento grosso = miosina**: cauda + **cabeça**. A cabeça tem sítio de ligação para **actina** e para **ATP** (é uma ATPase).
+- **Titina:** proteína elástica que ancora a miosina ao disco Z.
+- **Bandas:**
+  - **Banda A:** comprimento total da miosina (escura). **Não muda** na contração.
+  - **Banda I:** só actina (clara). **Encurta**.
+  - **Zona H:** só miosina, no centro. **Encurta/some**.
+  - **Linha M:** meio do sarcômero, onde a miosina se ancora.
+- **Teoria dos filamentos deslizantes:** na contração os filamentos **não mudam de tamanho**; eles **deslizam** uns sobre os outros e o sarcômero encurta (os discos Z se aproximam).
+
+### Controle neural
+- **Neurônio motor superior (1ª ordem):** corpo no **córtex motor**.
+- **Neurônio motor inferior (2ª ordem):** corpo no **tronco encefálico ou corno ventral da medula** → axônio vai até o músculo.
+- **Junção neuromuscular (placa motora):** terminal axônico + fenda + região da membrana muscular **cheia de receptores de ACh**, com **fendas subneurais** que aumentam a área.
+
+### Passo a passo da contração (acoplamento excitação-contração)
+1. Potencial de ação chega ao terminal do neurônio motor → abrem canais de **Ca²⁺** → exocitose de **acetilcolina (ACh)**.
+2. ACh liga aos **receptores nicotínicos** da placa motora (canal que se abre com 2 moléculas de ACh) → entra **Na⁺** → potencial de placa → **potencial de ação muscular**.
+3. A **acetilcolinesterase (AChE)** degrada a ACh na fenda (acetato + colina).
+4. O PA se espalha pelo sarcolema e desce pelos **túbulos T**.
+5. No túbulo T, o **receptor DHP** (sensor de voltagem, canal de Ca²⁺ tipo L) muda de forma e abre o **receptor de rianodina (RyR)** do retículo sarcoplasmático → **Ca²⁺ é liberado no citosol**.
+6. **Ca²⁺ liga à troponina C** → a **tropomiosina se desloca** e expõe os sítios de ligação da actina.
+7. **Ciclo das pontes cruzadas:**
+   - a cabeça da miosina (com ADP + Pi, “engatilhada”) **liga à actina**;
+   - libera o Pi → **movimento de força** (puxa a actina em direção à linha M);
+   - libera o ADP (fica presa = estado de rigor);
+   - **novo ATP liga → a miosina se solta** da actina;
+   - ATP é hidrolisado → a cabeça volta a ficar engatilhada → repete enquanto houver Ca²⁺ e ATP.
+8. **Relaxamento:** a **Ca²⁺-ATPase** bombeia o Ca²⁺ de volta para o retículo (gasta ATP) → a tropomiosina volta a cobrir a actina.
+
+### Energia (ATP) na contração
+- O ATP é usado por: **miosina ATPase** (contração), **Ca²⁺-ATPase** (relaxamento) e **Na⁺/K⁺-ATPase** (restaura os íons após o PA).
+- **Fosfocreatina:** no repouso, **creatina + ATP → fosfocreatina + ADP** (enzima creatina-cinase). Na atividade faz o inverso: **fosfocreatina + ADP → creatina + ATP** (fonte rápida de ATP).
+
+### Fadiga muscular
+- **Central (SNC):** fatores psicológicos, reflexos protetores.
+- **Periférica:**
+  - na junção neuromuscular: ↓ liberação de ACh e ↓ ativação do receptor;
+  - no acoplamento excitação-contração: alteração do potencial, ↓ liberação de Ca²⁺, ↓ interação Ca²⁺-troponina;
+  - teorias de **depleção** (fosfocreatina, ATP, glicogênio) e de **acúmulo** (H⁺, Pi, lactato).
+
+### Tipos de fibra muscular
+| | **Oxidativa lenta (tipo I, vermelha)** | **Glicolítica-oxidativa rápida (IIa, vermelha)** | **Glicolítica rápida (IIb/IIx, branca)** |
+|---|---|---|---|
+| Velocidade / ATPase da miosina | Lenta | Rápida | Rápida |
+| Diâmetro | Pequeno | Médio | Grande |
+| Duração da contração | Longa | Curta | Curta |
+| Fadiga | **Resistente** | Resistente | **Fatiga fácil** |
+| Uso | **Postura** | Ficar de pé, caminhar | Movimentos **rápidos e finos** (pular) |
+| Metabolismo | **Aeróbio (oxidativo)** | Glicolítico + oxidativo (melhora com treino) | **Anaeróbio (glicolítico)** |
+| Capilares / mitocôndrias | Muitos | Moderados | Poucos |
+| Cor | Vermelho-escuro (**mioglobina**) | Vermelho | Clara |
+
+### Rigor mortis (rigidez cadavérica)
+Após a morte **acaba o ATP**. Sem ATP a **miosina não se solta da actina**, as pontes cruzadas ficam presas e o músculo fica rígido. O Ca²⁺ também vaza do retículo e não é recaptado, porque a Ca²⁺-ATPase precisa de ATP.
+
+---
+
 ## Revisão rápida — perguntas prováveis
 1. **O que é homeostase e quem cunhou o conceito de meio interno?** → Estabilidade relativa do meio interno (LEC); Claude Bernard.
 2. **Diferencie feedback negativo e positivo, com exemplos.** → Negativo: oposto ao estímulo (temperatura). Positivo: amplifica (parto, coagulação).
@@ -255,6 +412,20 @@ Derivados de aminoácidos: catecolaminas (adrenalina, noradrenalina — comporta
 14. **Via Gq gera quais segundos mensageiros?** → DAG (ativa PKC) e IP3 (libera Ca²⁺).
 15. **Como funciona o sildenafil?** → Inibe PDE-5 → mantém GMPc → relaxamento do músculo liso.
 16. **Receptor da insulina é de que tipo?** → Tirosina-cinase.
+17. **Diferença entre sensação e percepção?** → Sensação: detectar o estímulo. Percepção: dar significado a ele.
+18. **O que é transdução sensorial e potencial receptor?** → Converter a energia do estímulo em sinal elétrico. O potencial receptor é graduado e local, e vira PA se atingir o limiar.
+19. **Campo receptivo pequeno significa o quê?** → Alta densidade de inervação, maior sensibilidade e precisão.
+20. **Exteroceptor, interoceptor e proprioceptor?** → Meio externo; vísceras/meio interno; músculos, tendões e articulações.
+21. **Qual via leva dor e temperatura e qual leva tato fino e propriocepção?** → Ântero-lateral (espinotalâmica); coluna dorsal–lemnisco medial.
+22. **Caminho da informação sensorial até o córtex?** → Medula → bulbo → tálamo → córtex sensorial.
+23. **O que é o homúnculo de Penfield?** → Mapa do corpo no córtex (pré e pós-central). Partes mais usadas ou mais sensíveis têm maior representação.
+24. **Organização do músculo esquelético?** → Músculo → fascículo → fibra → miofibrila → sarcômero → actina e miosina.
+25. **O que encurta no sarcômero durante a contração?** → Banda I e zona H. A banda A não muda.
+26. **Qual o papel do Ca²⁺ na contração?** → Liga à troponina C → tropomiosina se desloca → expõe o sítio da actina para a miosina.
+27. **Receptor da placa motora?** → Nicotínico (ACh) → entra Na⁺.
+28. **Para que serve o ATP no ciclo das pontes cruzadas?** → Soltar a miosina da actina e reengatilhar a cabeça. Também serve para o relaxamento (Ca²⁺-ATPase).
+29. **Por que ocorre o rigor mortis?** → Falta de ATP, então a miosina fica presa à actina.
+30. **Fibra de postura x fibra de corrida rápida?** → Oxidativa lenta (tipo I, vermelha, resistente à fadiga) x glicolítica rápida (branca, fadiga fácil).
 
 ---
-> ⚠️ Os dois vídeos do YouTube indicados (`5VkaOjZ50Hg` e `RgnrKwKOf3M`) não puderam ser acessados (o YouTube é bloqueado neste ambiente), então este resumo foi feito apenas a partir dos 5 PDFs das aulas.
+> ⚠️ Os dois vídeos do YouTube indicados (`5VkaOjZ50Hg` e `RgnrKwKOf3M`) não puderam ser acessados (o YouTube é bloqueado neste ambiente), então este resumo foi feito apenas a partir dos slides das 7 aulas.
