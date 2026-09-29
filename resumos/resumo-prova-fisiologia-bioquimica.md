@@ -1,6 +1,6 @@
 # Resumo para a prova — Fisiologia / Bioquímica
 
-Baseado nas 7 aulas: **(1) Introdução à Fisiologia e Homeostase**, **(2) Potencial de Membrana**, **(3) Sistema Nervoso**, **(4) Sinapses e Neurotransmissores**, **(5) Introdução aos Hormônios**, **(6) Sistema Somatossensorial**, **(7) Músculo Esquelético**.
+Baseado nas aulas: **(1) Introdução à Fisiologia e Homeostase**, **(2) Potencial de Membrana**, **(3) Sistema Nervoso**, **(4) Sinapses e Neurotransmissores**, **(5) Introdução aos Hormônios**, **(6) Sistema Somatossensorial**.
 
 ---
 
@@ -178,6 +178,103 @@ Origem:
   - **β1:** coração → ↑ contratilidade e ↑ FC; liberação de renina;
   - **β2:** **relaxamento** do músculo liso vascular e **brônquico** (broncodilatação); glicogenólise;
   - **β3:** tecido adiposo → **lipólise**.
+  - (Nos livros: β → **Gs** ↑AMPc; α1 → **Gq** ↑Ca²⁺; α2 → **Gi** ↓AMPc.)
+
+### Raciocínio para a prova: “o que esse neurotransmissor faz na célula pós-sináptica?”
+
+A pergunta da prova pode vir como *“o neurotransmissor X se liga ao receptor Y: o que acontece com a célula pós-sináptica?”*. Para responder, siga sempre **4 perguntas**:
+
+1. **Que tipo de receptor é?** Ionotrópico (canal) ou metabotrópico (proteína G)?
+2. **Que canal abre ou fecha?** E portanto **qual íon passa** e **em que sentido** (entra ou sai)?
+3. **O que isso faz com o potencial de membrana?** A membrana fica mais positiva (**despolariza**) ou mais negativa (**hiperpolariza**)?
+4. **A célula fica mais perto ou mais longe do limiar (−55 mV)?** Mais perto: **excitação (PEPS)**, mais chance de disparar PA. Mais longe: **inibição (PIPS)**, menos chance de disparar PA.
+
+**Regra de ouro dos íons** (lembre dos gradientes: fora tem Na⁺, Cl⁻ e Ca²⁺; dentro tem K⁺):
+
+| Íon | Se o canal abre, ele… | Efeito na membrana | Resultado |
+|---|---|---|---|
+| **Na⁺** | **entra** (carga + para dentro) | despolariza | **excita** (PEPS) |
+| **Ca²⁺** | **entra** | despolariza + age como 2º mensageiro | **excita** (e ativa enzimas; ex. NMDA → memória) |
+| **K⁺** | **sai** (carga + para fora) | hiperpolariza | **inibe** (PIPS) |
+| **Cl⁻** | **entra** (carga − para dentro) | hiperpolariza (ou “segura” no repouso) | **inibe** (PIPS) |
+
+> Dica: **excitar** = deixar entrar carga **positiva**. **Inibir** = deixar entrar carga **negativa** (Cl⁻) ou deixar **sair** carga positiva (K⁺). Fechar canais de K⁺ também excita, porque a carga positiva fica presa dentro da célula.
+
+### Inibição na célula pós-sináptica (passo a passo)
+Exemplo clássico: **GABA** no receptor **GABA-A** (ou **glicina** na medula).
+1. Chega um PA no terminal do neurônio **inibitório** → abrem canais de **Ca²⁺** → exocitose de GABA.
+2. O GABA liga ao **receptor GABA-A**, que é um **canal de Cl⁻** (ionotrópico).
+3. O canal abre e o **Cl⁻ entra** na célula pós-sináptica.
+4. O interior fica **mais negativo**: **hiperpolarização**, por exemplo de −70 para −75 mV. Isso é um **PIPS**.
+5. A célula fica **mais longe do limiar**, então precisa de **mais estímulo excitatório** para disparar PA. **Resultado: menos disparos, o neurônio é inibido.**
+6. Mesmo quando o Cl⁻ quase não muda a voltagem, os canais abertos **“vazam”** qualquer corrente excitatória que chegue, anulando os PEPS (**inibição por desvio / “shunting”**).
+
+Via **metabotrópica** de inibição (mais lenta e duradoura): **GABA-B**, **muscarínico M2 no coração**, **α2**, **D2**, **opioides (endorfinas)**. Todos usam a **proteína Gi**, que:
+- **abre canais de K⁺** → K⁺ **sai** → hiperpolariza;
+- **inibe a adenilato ciclase** → ↓ AMPc;
+- no terminal **pré-sináptico**, **fecha canais de Ca²⁺** → **menos neurotransmissor liberado**.
+
+### Excitação na célula pós-sináptica (passo a passo)
+Exemplo clássico: **glutamato** no receptor **AMPA**, ou **ACh** no **nicotínico**.
+1. O neurotransmissor liga ao receptor, que é um **canal de cátions**.
+2. **Na⁺ entra** (e sai um pouco de K⁺, mas entra muito mais Na⁺).
+3. A membrana **despolariza**: é um **PEPS**, por exemplo de −70 para −65 mV.
+4. Se os PEPS se somarem e chegarem ao **limiar (−55 mV)** no **cone de implantação**, dispara um **potencial de ação**.
+5. **NMDA:** só abre se a membrana já estiver despolarizada, porque isso tira o bloqueio de **Mg²⁺**. Quando abre, **Ca²⁺ entra** e ativa enzimas que deixam a sinapse mais forte (**potenciação de longa duração → memória e aprendizado**). Em excesso, o Ca²⁺ vira **excitotoxicidade** (morte neuronal no AVC).
+
+### Integração: o neurônio “soma” tudo
+- Um neurônio recebe **milhares** de sinapses, excitatórias e inibitórias. Os PEPS e PIPS **se somam** no **cone de implantação** (zona de gatilho, onde há muitos canais de Na⁺).
+  - **Somação temporal:** a **mesma** sinapse dispara várias vezes seguidas.
+  - **Somação espacial:** **várias** sinapses disparam ao mesmo tempo.
+- **Se a soma atingir −55 mV, sai PA. Se não, nada acontece.** Um PIPS pode **anular** um PEPS.
+- PEPS e PIPS são **potenciais graduados**: pequenos, locais, somáveis e sem período refratário. O PA, ao contrário, é **tudo ou nada**.
+- **Inibição pré-sináptica:** um neurônio inibitório faz sinapse no **terminal axônico** de outro e **diminui a entrada de Ca²⁺** lá. Resultado: menos neurotransmissor liberado **só naquela via**, sem afetar o resto do neurônio pós-sináptico.
+
+### Como o sinal termina
+1. **Recaptação** pelo terminal pré-sináptico ou pela glia (noradrenalina, dopamina, serotonina, glutamato, GABA).
+2. **Degradação enzimática:** **acetilcolinesterase** (ACh); **MAO** e **COMT** (catecolaminas e serotonina).
+3. **Difusão** para fora da fenda.
+
+Se o término falha, o neurotransmissor fica **mais tempo na fenda** e o efeito fica **maior e mais longo**.
+
+### Tabela de consulta: neurotransmissor → receptor → o que acontece
+| Neurotransmissor | Receptor (tipo) | O que abre/ativa | Efeito na célula pós-sináptica |
+|---|---|---|---|
+| **Glutamato** | AMPA (ionotrópico) | canal de Na⁺ (e K⁺) | **Na⁺ entra** → despolariza → **excita** |
+| | NMDA (ionotrópico) | canal de Ca²⁺/Na⁺ (tira o Mg²⁺) | **Ca²⁺ entra** → excita + plasticidade (memória) |
+| **GABA** | GABA-A (ionotrópico) | canal de **Cl⁻** | **Cl⁻ entra** → hiperpolariza → **inibe** |
+| | GABA-B (metabotrópico, Gi) | canal de **K⁺** | **K⁺ sai** → hiperpolariza → **inibe** (lento) |
+| **Glicina** | ionotrópico (medula/tronco) | canal de **Cl⁻** | **Cl⁻ entra** → **inibe** (ex.: inibe motoneurônios) |
+| **Acetilcolina** | Nicotínico (ionotrópico) | canal de Na⁺/K⁺ | **Na⁺ entra** → **excita** (placa motora, gânglios autonômicos) |
+| | Muscarínico M2 (Gi) – coração | canal de K⁺ | **K⁺ sai** → hiperpolariza → **↓ frequência cardíaca** (inibe) |
+| | Muscarínico M1/M3 (Gq) | IP₃ + DAG → ↑Ca²⁺ | **excita**: contrai músculo liso, secreção de glândulas |
+| **Noradrenalina/adrenalina** | α1 (Gq) | IP₃ → ↑Ca²⁺ | contração do músculo liso vascular (vasoconstrição) |
+| | α2 (Gi) – pré-sináptico | ↓AMPc, ↓Ca²⁺ no terminal | **↓ liberação de noradrenalina** (autoinibição) |
+| | β1 (Gs) – coração | ↑AMPc → PKA | ↑ força e ↑ frequência cardíaca |
+| | β2 (Gs) | ↑AMPc | relaxamento (broncodilatação, vasodilatação) |
+| **Dopamina** | D1 (Gs) / D2 (Gi) | ↑AMPc / ↓AMPc + K⁺ sai | D1 excita; D2 inibe (movimento, recompensa, humor) |
+| **Serotonina** | 5-HT3 (ionotrópico) / demais (proteína G) | canal de cátions / 2º mensageiros | humor, sono, apetite, náusea |
+| **Endorfinas/encefalinas** | opioides (Gi) | K⁺ sai; ↓ Ca²⁺ no terminal | **inibem** a transmissão da **dor** (↓ substância P) |
+| **Óxido nítrico** | não tem receptor de membrana (é um gás, difunde) | guanilato ciclase → GMPc | relaxamento do músculo liso; mensageiro retrógrado |
+
+> **Atenção:** o **mesmo neurotransmissor** pode **excitar ou inibir**. Quem decide é o **receptor** da célula-alvo. Exemplo: a ACh **excita** o músculo esquelético (nicotínico: Na⁺ entra) e **inibe** o coração (M2: K⁺ sai).
+
+### “E se…?” — situações que podem cair
+| Situação | Mecanismo | Consequência |
+|---|---|---|
+| **Benzodiazepínicos** (diazepam), barbitúricos, álcool | ↑ ação do GABA no GABA-A → mais Cl⁻ entra | mais inibição → sedação, ansiolítico, anticonvulsivante |
+| **Estricnina** | bloqueia o receptor de **glicina** | perde a inibição na medula → **convulsões e espasmos** |
+| **Toxina tetânica** | impede a **liberação** de glicina/GABA | perde a inibição → **contração rígida** (tétano) |
+| **Toxina botulínica** | impede a **liberação de ACh** | não há excitação do músculo → **paralisia flácida** |
+| **Curare** | bloqueia o receptor **nicotínico** | músculo não despolariza → paralisia |
+| **Organofosforados** (inseticidas), neostigmina | inibem a **acetilcolinesterase** | ACh acumula → excesso de estímulo colinérgico |
+| **Atropina** | bloqueia o **muscarínico** | ↑ FC, pupila dilatada, boca seca |
+| **Cocaína / anfetamina** | bloqueiam a **recaptação** (ou liberam) dopamina e noradrenalina | DA/NA ficam na fenda → euforia, taquicardia |
+| **Antidepressivos ISRS** (fluoxetina) | bloqueiam a **recaptação de serotonina** | mais 5-HT na fenda → melhora do humor |
+| **Inibidores da MAO** | impedem a degradação de monoaminas | ↑ NA, DA e 5-HT |
+| **Epilepsia** | desequilíbrio: muito glutamato ou pouco GABA | descargas excessivas → crises |
+| **Morfina** | age em receptores **opioides** (Gi) | ↓ liberação de neurotransmissores da dor → analgesia |
+
 
 ---
 
@@ -316,85 +413,6 @@ Célula ou parte da célula com proteínas de membrana sensíveis à energia do 
 
 ---
 
-## 7. Músculo Esquelético
-
-### Tipos de músculo
-| | Esquelético | Cardíaco | Liso |
-|---|---|---|---|
-| Local | Presos aos ossos | Só no coração | Órgãos ocos, vasos, estômago |
-| Estriado? | **Sim** | **Sim** (discos intercalares) | Não |
-| Controle | **Voluntário** | Involuntário | Involuntário |
-
-### Nomenclatura
-Célula muscular = **fibra muscular** · membrana = **sarcolema** · citoplasma = **sarcoplasma** · retículo endoplasmático = **retículo sarcoplasmático** (armazena **Ca²⁺**).
-
-### Organização (do maior para o menor)
-**Músculo → fascículos (feixes de fibras) → fibra muscular (célula, com vários núcleos) → miofibrilas → sarcômeros → filamentos (actina e miosina)**.
-- O músculo também tem tecido conjuntivo, vasos e nervos, e se liga ao osso pelo **tendão**.
-- A fibra muscular contém: sarcolema, **túbulos T**, sarcoplasma, **vários núcleos**, retículo sarcoplasmático, miofibrilas, **mitocôndrias** e **grânulos de glicogênio**.
-- **Túbulos T:** invaginações do sarcolema que **levam o potencial de ação para dentro da fibra**.
-- **Tríade:** 1 túbulo T + 2 cisternas terminais do retículo sarcoplasmático.
-
-### Sarcômero (unidade contrátil)
-- Vai de um **disco (linha) Z** a outro.
-- **Filamento fino = actina**, junto com **tropomiosina** (cobre os sítios de ligação da actina) e **troponina** (TnC liga Ca²⁺, TnI inibe, TnT liga à tropomiosina).
-- **Filamento grosso = miosina**: cauda + **cabeça**. A cabeça tem sítio de ligação para **actina** e para **ATP** (é uma ATPase).
-- **Titina:** proteína elástica que ancora a miosina ao disco Z.
-- **Bandas:**
-  - **Banda A:** comprimento total da miosina (escura). **Não muda** na contração.
-  - **Banda I:** só actina (clara). **Encurta**.
-  - **Zona H:** só miosina, no centro. **Encurta/some**.
-  - **Linha M:** meio do sarcômero, onde a miosina se ancora.
-- **Teoria dos filamentos deslizantes:** na contração os filamentos **não mudam de tamanho**; eles **deslizam** uns sobre os outros e o sarcômero encurta (os discos Z se aproximam).
-
-### Controle neural
-- **Neurônio motor superior (1ª ordem):** corpo no **córtex motor**.
-- **Neurônio motor inferior (2ª ordem):** corpo no **tronco encefálico ou corno ventral da medula** → axônio vai até o músculo.
-- **Junção neuromuscular (placa motora):** terminal axônico + fenda + região da membrana muscular **cheia de receptores de ACh**, com **fendas subneurais** que aumentam a área.
-
-### Passo a passo da contração (acoplamento excitação-contração)
-1. Potencial de ação chega ao terminal do neurônio motor → abrem canais de **Ca²⁺** → exocitose de **acetilcolina (ACh)**.
-2. ACh liga aos **receptores nicotínicos** da placa motora (canal que se abre com 2 moléculas de ACh) → entra **Na⁺** → potencial de placa → **potencial de ação muscular**.
-3. A **acetilcolinesterase (AChE)** degrada a ACh na fenda (acetato + colina).
-4. O PA se espalha pelo sarcolema e desce pelos **túbulos T**.
-5. No túbulo T, o **receptor DHP** (sensor de voltagem, canal de Ca²⁺ tipo L) muda de forma e abre o **receptor de rianodina (RyR)** do retículo sarcoplasmático → **Ca²⁺ é liberado no citosol**.
-6. **Ca²⁺ liga à troponina C** → a **tropomiosina se desloca** e expõe os sítios de ligação da actina.
-7. **Ciclo das pontes cruzadas:**
-   - a cabeça da miosina (com ADP + Pi, “engatilhada”) **liga à actina**;
-   - libera o Pi → **movimento de força** (puxa a actina em direção à linha M);
-   - libera o ADP (fica presa = estado de rigor);
-   - **novo ATP liga → a miosina se solta** da actina;
-   - ATP é hidrolisado → a cabeça volta a ficar engatilhada → repete enquanto houver Ca²⁺ e ATP.
-8. **Relaxamento:** a **Ca²⁺-ATPase** bombeia o Ca²⁺ de volta para o retículo (gasta ATP) → a tropomiosina volta a cobrir a actina.
-
-### Energia (ATP) na contração
-- O ATP é usado por: **miosina ATPase** (contração), **Ca²⁺-ATPase** (relaxamento) e **Na⁺/K⁺-ATPase** (restaura os íons após o PA).
-- **Fosfocreatina:** no repouso, **creatina + ATP → fosfocreatina + ADP** (enzima creatina-cinase). Na atividade faz o inverso: **fosfocreatina + ADP → creatina + ATP** (fonte rápida de ATP).
-
-### Fadiga muscular
-- **Central (SNC):** fatores psicológicos, reflexos protetores.
-- **Periférica:**
-  - na junção neuromuscular: ↓ liberação de ACh e ↓ ativação do receptor;
-  - no acoplamento excitação-contração: alteração do potencial, ↓ liberação de Ca²⁺, ↓ interação Ca²⁺-troponina;
-  - teorias de **depleção** (fosfocreatina, ATP, glicogênio) e de **acúmulo** (H⁺, Pi, lactato).
-
-### Tipos de fibra muscular
-| | **Oxidativa lenta (tipo I, vermelha)** | **Glicolítica-oxidativa rápida (IIa, vermelha)** | **Glicolítica rápida (IIb/IIx, branca)** |
-|---|---|---|---|
-| Velocidade / ATPase da miosina | Lenta | Rápida | Rápida |
-| Diâmetro | Pequeno | Médio | Grande |
-| Duração da contração | Longa | Curta | Curta |
-| Fadiga | **Resistente** | Resistente | **Fatiga fácil** |
-| Uso | **Postura** | Ficar de pé, caminhar | Movimentos **rápidos e finos** (pular) |
-| Metabolismo | **Aeróbio (oxidativo)** | Glicolítico + oxidativo (melhora com treino) | **Anaeróbio (glicolítico)** |
-| Capilares / mitocôndrias | Muitos | Moderados | Poucos |
-| Cor | Vermelho-escuro (**mioglobina**) | Vermelho | Clara |
-
-### Rigor mortis (rigidez cadavérica)
-Após a morte **acaba o ATP**. Sem ATP a **miosina não se solta da actina**, as pontes cruzadas ficam presas e o músculo fica rígido. O Ca²⁺ também vaza do retículo e não é recaptado, porque a Ca²⁺-ATPase precisa de ATP.
-
----
-
 ## Revisão rápida — perguntas prováveis
 1. **O que é homeostase e quem cunhou o conceito de meio interno?** → Estabilidade relativa do meio interno (LEC); Claude Bernard.
 2. **Diferencie feedback negativo e positivo, com exemplos.** → Negativo: oposto ao estímulo (temperatura). Positivo: amplifica (parto, coagulação).
@@ -419,13 +437,18 @@ Após a morte **acaba o ATP**. Sem ATP a **miosina não se solta da actina**, as
 21. **Qual via leva dor e temperatura e qual leva tato fino e propriocepção?** → Ântero-lateral (espinotalâmica); coluna dorsal–lemnisco medial.
 22. **Caminho da informação sensorial até o córtex?** → Medula → bulbo → tálamo → córtex sensorial.
 23. **O que é o homúnculo de Penfield?** → Mapa do corpo no córtex (pré e pós-central). Partes mais usadas ou mais sensíveis têm maior representação.
-24. **Organização do músculo esquelético?** → Músculo → fascículo → fibra → miofibrila → sarcômero → actina e miosina.
-25. **O que encurta no sarcômero durante a contração?** → Banda I e zona H. A banda A não muda.
-26. **Qual o papel do Ca²⁺ na contração?** → Liga à troponina C → tropomiosina se desloca → expõe o sítio da actina para a miosina.
-27. **Receptor da placa motora?** → Nicotínico (ACh) → entra Na⁺.
-28. **Para que serve o ATP no ciclo das pontes cruzadas?** → Soltar a miosina da actina e reengatilhar a cabeça. Também serve para o relaxamento (Ca²⁺-ATPase).
-29. **Por que ocorre o rigor mortis?** → Falta de ATP, então a miosina fica presa à actina.
-30. **Fibra de postura x fibra de corrida rápida?** → Oxidativa lenta (tipo I, vermelha, resistente à fadiga) x glicolítica rápida (branca, fadiga fácil).
+
+### Revisão extra — neurotransmissão (estilo “o que acontece?”)
+24. **O GABA se liga ao GABA-A. O que acontece com a célula pós-sináptica?** → Abre canal de Cl⁻ → Cl⁻ entra → hiperpolariza (PIPS) → fica mais longe do limiar → inibida, menos chance de disparar PA.
+25. **O glutamato se liga ao AMPA. O que acontece?** → Abre canal de cátions → Na⁺ entra → despolariza (PEPS) → aproxima do limiar → excitada.
+26. **Por que a abertura de canais de K⁺ inibe o neurônio?** → K⁺ sai, levando carga positiva → interior mais negativo → hiperpolarização.
+27. **Como a ACh pode excitar o músculo e inibir o coração?** → Depende do receptor: nicotínico (Na⁺ entra, excita) x M2 (Gi, K⁺ sai, hiperpolariza, ↓ FC).
+28. **Um PEPS sozinho gera PA?** → Normalmente não. É preciso somar vários PEPS (somação temporal ou espacial) até −55 mV no cone de implantação.
+29. **O que acontece se a acetilcolinesterase for inibida?** → ACh acumula na fenda → estimulação prolongada ou excessiva.
+30. **O que acontece se o receptor de glicina for bloqueado (estricnina)?** → Perde a inibição dos motoneurônios → hiperexcitação, convulsões e espasmos.
+31. **Qual a diferença entre PIPS ionotrópico e metabotrópico?** → Ionotrópico (GABA-A: Cl⁻) é rápido e curto. Metabotrópico (GABA-B, M2, opioides: Gi → K⁺ sai, ↓AMPc) é lento e duradouro.
+32. **O que é inibição pré-sináptica?** → Um neurônio inibitório atua no terminal de outro, ↓ entrada de Ca²⁺ → menos neurotransmissor liberado naquela via.
+33. **Por que benzodiazepínicos são usados em epilepsia e ansiedade?** → Potencializam o GABA-A → mais Cl⁻ entra → mais inibição.
 
 ---
-> ⚠️ Os dois vídeos do YouTube indicados (`5VkaOjZ50Hg` e `RgnrKwKOf3M`) não puderam ser acessados (o YouTube é bloqueado neste ambiente), então este resumo foi feito apenas a partir dos slides das 7 aulas.
+> Obs.: Os dois vídeos do YouTube indicados (`5VkaOjZ50Hg` e `RgnrKwKOf3M`) não puderam ser acessados (o YouTube é bloqueado neste ambiente), então este resumo foi feito apenas a partir dos slides das aulas.
